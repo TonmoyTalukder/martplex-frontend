@@ -1,12 +1,12 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
 export interface IInput {
-  variant?: 'flat' | 'bordered' | 'faded' | 'underlined';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "flat" | "bordered" | "faded" | "underlined";
+  size?: "sm" | "md" | "lg";
   required?: boolean;
   type?: string;
   label: string;
@@ -15,13 +15,13 @@ export interface IInput {
 }
 
 export const USER_ROLE = {
-  ADMIN: 'ADMIN',
-  USER: 'USER',
+  ADMIN: "ADMIN",
+  USER: "USER",
 } as const;
 
 export const USER_STATUS = {
-  ACTIVE: 'ACTIVE',
-  BLOCKED: 'BLOCKED',
+  ACTIVE: "ACTIVE",
+  BLOCKED: "BLOCKED",
 } as const;
 
 export type TFollowUser = {
@@ -36,8 +36,8 @@ export interface IUser {
   name?: string;
   email?: string;
   phoneNumber?: string;
-  role?: 'CUSTOMER' | 'ADMIN' | 'VENDOR' | 'SUOER_ADMIN';
-  status?: 'PENDING_VERIFICATION' | 'ACTIVE' | 'BLOCKED' | 'DELETED';
+  role?: "CUSTOMER" | "ADMIN" | "VENDOR" | "SUPER_ADMIN";
+  status?: "PENDING_VERIFICATION" | "ACTIVE" | "BLOCKED" | "DELETED";
   profilePhoto?: string | null;
   isVerified?: boolean;
   isDeleted?: boolean;

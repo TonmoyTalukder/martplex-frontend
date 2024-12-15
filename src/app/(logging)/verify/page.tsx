@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Button } from '@nextui-org/react';
+import React, { useEffect, useState } from "react";
+import { Button } from "@nextui-org/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import CFInput from '@/src/components/form/CFInput';
-import CFForm from '@/src/components/form/CFForm';
-import { useVerify } from '@/src/hooks/auth.hooks';
-import { useUser } from '@/src/context/user.provider';
-import { logout } from '@/src/services/AuthService';
-import { useRouter, useSearchParams } from 'next/navigation';
+import CFInput from "@/src/components/form/CFInput";
+import CFForm from "@/src/components/form/CFForm";
+import { useVerify } from "@/src/hooks/auth.hooks";
+import { useUser } from "@/src/context/user.provider";
+import { logout } from "@/src/services/AuthService";
 
 export default function VerifyPage() {
   const { user, setIsLoading: userLoading } = useUser();
@@ -16,7 +16,7 @@ export default function VerifyPage() {
   const [verifyCode, setVerifyCode] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect');
+  const redirect = searchParams.get("redirect");
 
   const email = user?.email;
 
@@ -29,7 +29,7 @@ export default function VerifyPage() {
         },
       );
     } else {
-      console.error('Invalid code.');
+      console.error("Invalid code.");
     }
   };
 
@@ -38,7 +38,7 @@ export default function VerifyPage() {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.push('/');
+        router.push("/");
       }
     }
   }, [isPending, isSuccess, redirect, router]);

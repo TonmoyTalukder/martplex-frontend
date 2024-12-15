@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Button } from '@nextui-org/react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
-import { useResetPassword } from '@/src/hooks/auth.hooks';
-import CFInput from '@/src/components/form/CFInput';
-import CFForm from '@/src/components/form/CFForm';
-import { useSearchParams } from 'next/navigation';
+import { useResetPassword } from "@/src/hooks/auth.hooks";
+import CFInput from "@/src/components/form/CFInput";
+import CFForm from "@/src/components/form/CFForm";
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
-  const id = searchParams.get('id');
-  const token = searchParams.get('token');
+  const id = searchParams.get("id");
+  const token = searchParams.get("token");
 
   // console.log('userId: ', id);
   // console.log('token: ', token);
@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
         },
       );
     } else {
-      console.error('Invalid token format');
+      console.error("Invalid token format");
     }
   };
 

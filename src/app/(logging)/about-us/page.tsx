@@ -15,7 +15,7 @@ const AboutPage = () => {
         </h1>
 
         {/* Accordion Sections */}
-        <Accordion variant="shadow" className="mb-8">
+        <Accordion className="mb-8" variant="shadow">
           {/* Mission Section */}
           <AccordionItem
             key="mission"

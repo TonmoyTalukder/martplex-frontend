@@ -1,19 +1,17 @@
 /* eslint-disable no-console */
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@nextui-org/button';
-import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { FiX } from 'react-icons/fi';
-import { Input } from '@nextui-org/input';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { NextPage } from 'next';
+import { useState, useEffect } from "react";
+import { Button } from "@nextui-org/button";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { NextPage } from "next";
 
-import CFForm from '@/src/components/form/CFForm';
-import CFInput from '@/src/components/form/CFInput';
-import { useUser } from '@/src/context/user.provider';
-import { useUserRegistration } from '@/src/hooks/auth.hooks';
+import CFForm from "@/src/components/form/CFForm";
+import CFInput from "@/src/components/form/CFInput";
+import { useUser } from "@/src/context/user.provider";
+import { useUserRegistration } from "@/src/hooks/auth.hooks";
 
 const SignUpPage: NextPage = () => {
   const { setIsLoading: userLoading } = useUser();
@@ -24,16 +22,16 @@ const SignUpPage: NextPage = () => {
   } = useUserRegistration();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const redirect = searchParams.get('redirect');
+  const redirect = searchParams.get("redirect");
 
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async () => {
@@ -41,7 +39,7 @@ const SignUpPage: NextPage = () => {
       ...formData,
     };
 
-    console.log('Sign Up Data =>', userData);
+    console.log("Sign Up Data =>", userData);
 
     handleUserSignUp(userData);
     userLoading(true);
@@ -52,7 +50,7 @@ const SignUpPage: NextPage = () => {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.replace('/');
+        router.replace("/");
       }
     }
   }, [isPending, isSuccess]);
@@ -81,7 +79,7 @@ const SignUpPage: NextPage = () => {
   };
 
   const handleInputChange = (name: string, value: string) => {
-    console.log('Input change detected:', name, value);
+    console.log("Input change detected:", name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -100,7 +98,7 @@ const SignUpPage: NextPage = () => {
                     label="Name"
                     name="name"
                     type="text"
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                   />
                 </div>
                 <div className="py-3">
@@ -109,7 +107,7 @@ const SignUpPage: NextPage = () => {
                     label="Email"
                     name="email"
                     type="email"
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                   />
                 </div>
                 <div className="py-3">
@@ -120,7 +118,7 @@ const SignUpPage: NextPage = () => {
                     // type="tel"
                     type="text"
                     onChange={(e) =>
-                      handleInputChange('phoneNumber', e.target.value)
+                      handleInputChange("phoneNumber", e.target.value)
                     }
                   />
                 </div>
@@ -144,7 +142,7 @@ const SignUpPage: NextPage = () => {
                     name="password"
                     type="password"
                     onChange={(e) =>
-                      handleInputChange('password', e.target.value)
+                      handleInputChange("password", e.target.value)
                     }
                   />
                 </div>
@@ -155,7 +153,7 @@ const SignUpPage: NextPage = () => {
                     name="confirm_password"
                     type="password"
                     onChange={(e) =>
-                      handleInputChange('confirmPassword', e.target.value)
+                      handleInputChange("confirmPassword", e.target.value)
                     }
                   />
                 </div>
@@ -181,10 +179,10 @@ const SignUpPage: NextPage = () => {
             )}
 
             <div className="text-center">
-              Already have account ?{' '}
+              Already have account ?{" "}
               <Link
                 className="text-[#daa611] hover:text-[#a58a40] underline"
-                href={'/login'}
+                href={"/login"}
               >
                 Login here
               </Link>

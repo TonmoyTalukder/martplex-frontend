@@ -1,53 +1,22 @@
-# Next.js & NextUI Template
+# MartPlex-Backend: Multi Vendor E-Commerce Application
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+### Author
+**[Tonmoy Talukder](https://tonmoytalukder.github.io/dev)** </br>
+*Full Stack Developer*
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+## Project Description
+The E-Commerce Application is designed to provide a complete online shopping experience for users, vendors, and administrators. It serves as a platform where users can browse and purchase products, vendors can manage their shops and inventories, and administrators can control and monitor the entire system. The application focuses on being intuitive, responsive, and secure, providing a seamless experience for all user roles. The core of this project is to build a scalable, high-performance system using modern web development technologies. It leverages Node.js and Express.js for the backend, and PostgreSQL for data storage. The application integrates with third-party services for payments and file storage, ensuring a professional, enterprise-grade solution.
 
-## Technologies Used
-
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
-
-## How to Use
-
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+## Technology Stack
+### Frontend
+- Next.js
+- TanStack Query
+- TailwindCSS
+- Next UI
+- TypeScript
+### Backend
+- Prisma ORM
+- Node.js
+- PostgreSQL
+- Express.js
+- TypeScript

@@ -3,9 +3,10 @@ import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
 import { button as buttonStyles } from "@nextui-org/theme";
 
+import { GithubIcon } from "../../components/UI/icons";
+
 import { siteConfig } from "@/src/config/site";
 import { title, subtitle } from "@/src/components/primitives";
-import { GithubIcon } from "../../components/UI/icons";
 
 export default function Home() {
   return (

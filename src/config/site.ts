@@ -2,7 +2,8 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "MartPlex",
-  description: "An Multi Vendor E-Commerce Application,that is designed to provide a complete online shopping experience for users, vendors, and administrators.",
+  description:
+    "An Multi Vendor E-Commerce Application,that is designed to provide a complete online shopping experience for users, vendors, and administrators.",
   navItems: [
     {
       label: "Home",

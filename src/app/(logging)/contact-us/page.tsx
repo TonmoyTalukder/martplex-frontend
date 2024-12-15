@@ -36,35 +36,35 @@ const ContactPage = () => {
         </h1>
 
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <Input
+            fullWidth
+            required
             label="Email"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-            required
           />
           <Input
+            fullWidth
+            required
             label="Subject"
             placeholder="Enter the subject"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            fullWidth
-            required
           />
           <Textarea
+            fullWidth
+            required
             label="Message"
             placeholder="Write your message here"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            fullWidth
-            required
           />
           <div className="flex justify-center">
             <button
-              type="submit"
               className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+              type="submit"
             >
               Submit
             </button>
