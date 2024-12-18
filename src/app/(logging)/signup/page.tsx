@@ -50,7 +50,7 @@ const SignUpPage: NextPage = () => {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.replace("/");
+        router.replace("/verify");
       }
     }
   }, [isPending, isSuccess]);

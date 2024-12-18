@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Navbar as NextUINavbar,
@@ -8,38 +8,39 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
-import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
-import { link as linkStyles } from "@nextui-org/theme";
-import NextLink from "next/link";
-import clsx from "clsx";
-import { Avatar } from "@nextui-org/react";
+} from '@nextui-org/navbar';
+import { Button } from '@nextui-org/button';
+import { Kbd } from '@nextui-org/kbd';
+import { Link } from '@nextui-org/link';
+import { Input } from '@nextui-org/input';
+import { link as linkStyles } from '@nextui-org/theme';
+import NextLink from 'next/link';
+import clsx from 'clsx';
+import { Avatar, Badge } from '@nextui-org/react';
+import { FaShoppingCart } from 'react-icons/fa';
 
-import { siteConfig } from "@/src/config/site";
-import { ThemeSwitch } from "@/src/components/UI/theme-switch";
-import { SearchIcon, Logo } from "@/src/components/UI/icons";
-import { logout } from "@/src/services/AuthService";
-import { useUser } from "@/src/context/user.provider";
+import { siteConfig } from '@/src/config/site';
+import { ThemeSwitch } from '@/src/components/UI/theme-switch';
+import { SearchIcon, Logo } from '@/src/components/UI/icons';
+import { logout } from '@/src/services/AuthService';
+import { useUser } from '@/src/context/user.provider';
 
 export const Navbar = () => {
   const { user } = useUser();
 
   const avatarUrl =
-    user?.profilePhoto || "https://i.ibb.co.com/wcv1QBQ/5951752.png";
+    user?.profilePhoto || 'https://i.ibb.co.com/wcv1QBQ/5951752.png';
   const profileId = user?.id;
 
   const searchInput = (
     <Input
       aria-label="Search"
       classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
+        inputWrapper: 'bg-default-100',
+        input: 'text-sm',
       }}
       endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
+        <Kbd className="hidden lg:inline-block" keys={['command']}>
           K
         </Kbd>
       }
@@ -66,8 +67,8 @@ export const Navbar = () => {
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  linkStyles({ color: 'foreground' }),
+                  'data-[active=true]:text-primary data-[active=true]:font-medium',
                 )}
                 color="foreground"
                 href={item.href}
@@ -81,8 +82,8 @@ export const Navbar = () => {
           {user && (
             <Button
               className={clsx(
-                linkStyles({ color: "foreground" }),
-                "data-[active=true]:text-primary data-[active=true]:font-medium",
+                linkStyles({ color: 'foreground' }),
+                'data-[active=true]:text-primary data-[active=true]:font-medium',
               )}
               // color="foreground"
               onClick={() => {
@@ -99,11 +100,24 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <Link href={user ? `/profile/${profileId}` : "/login"}>
+        <NavbarItem className="hidden sm:flex gap-2 items-center">
+          <Link href={user ? `/profile/${profileId}` : '/login'}>
             <Avatar size="sm" src={avatarUrl} />
           </Link>
           <ThemeSwitch />
+          {/* <FaShoppingCart className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transfor" /> */}
+          <Link href="/cart">
+            <Badge
+              className=" transform hover:scale-110 transition-transform"
+              color="danger"
+              content="0"
+            >
+              <FaShoppingCart
+                className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transform"
+                // onClick={() => router.push('/cart')}
+              />
+            </Badge>
+          </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
       </NavbarContent>
@@ -121,10 +135,10 @@ export const Navbar = () => {
               <Link
                 color={
                   index === 2
-                    ? "primary"
+                    ? 'primary'
                     : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
+                      ? 'danger'
+                      : 'foreground'
                 }
                 href="#"
                 size="lg"

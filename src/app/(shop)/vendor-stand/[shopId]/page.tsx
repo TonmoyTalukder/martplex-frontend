@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Badge, Button, Textarea } from '@nextui-org/react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { FaHome, FaShoppingCart, FaUser } from 'react-icons/fa';
+import { useState } from "react";
+import { Badge, Button, Textarea } from "@nextui-org/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
 
 import {
   useGetProductsByVendorStand,
   useGetSingleVendorStand,
-} from '@/src/hooks/vendorstand.hooks';
-import { useUser } from '@/src/context/user.provider';
+} from "@/src/hooks/vendorstand.hooks";
+import { useUser } from "@/src/context/user.provider";
 
 interface IProps {
   params: {
@@ -27,7 +27,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
   const { user } = useUser();
   const loggedUserId = user?.id;
 
-  const [reviewText, setReviewText] = useState<string>('');
+  const [reviewText, setReviewText] = useState<string>("");
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   const vendorStand: any = vendorStandsData?.data?.vendorStandInfo;
@@ -41,7 +41,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
     new Set<string>(products.map((product: any) => product.category)),
   );
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const filteredProducts = selectedCategory
     ? products.filter((product: any) => product.category === selectedCategory)
@@ -53,12 +53,12 @@ const Shop = ({ params: { shopId } }: IProps) => {
   };
 
   const handleSubmitReview = () => {
-    console.log('Review Submitted:', reviewText);
-    setReviewText('');
+    console.log("Review Submitted:", reviewText);
+    setReviewText("");
   };
 
   const handleReply = (reviewId: string, replyText: string) => {
-    console.log('Reply Submitted:', { reviewId, replyText });
+    console.log("Reply Submitted:", { reviewId, replyText });
   };
 
   if (vendorLoading || productsLoading) return <p>Loading...</p>;
@@ -91,10 +91,10 @@ const Shop = ({ params: { shopId } }: IProps) => {
             <div className="mt-4 flex flex-row items-center gap-3">
               <Button
                 className="px-4 py-2 text-white font-medium rounded-md shadow-md transform hover:scale-105 transition-transform duration-300"
-                color={isFollowing ? 'secondary' : 'primary'}
+                color={isFollowing ? "secondary" : "primary"}
                 onPress={handleFollow}
               >
-                {isFollowing ? 'Unfollow' : 'Follow'}
+                {isFollowing ? "Unfollow" : "Follow"}
               </Button>
 
               <Button
@@ -117,7 +117,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
         <div className="fixed z-50 left-0 right-4 top-9 flex justify-end items-center gap-5 px-4">
           <FaHome
             className="text-white text-2xl cursor-pointer transform hover:scale-110 transition-transform"
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
           />
           <FaUser
             className="text-white text-2xl cursor-pointer transform hover:scale-110 transition-transform"
@@ -201,7 +201,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
               <p>No reviews available.</p>
             )}
           </div>
-          {vendorStand?.ownerId === loggedUserId && (
+          {vendorStand?.ownerId !== loggedUserId && (
             <div className="mt-4 flex flex-col justify-center items-center gap-3 p-8">
               <Textarea
                 isClearable
@@ -212,8 +212,8 @@ const Shop = ({ params: { shopId } }: IProps) => {
                 onChange={(e) => setReviewText(e.target.value)}
               />
               <Button
-                color="primary"
                 className="mt-2"
+                color="primary"
                 onPress={handleSubmitReview}
               >
                 Submit Review

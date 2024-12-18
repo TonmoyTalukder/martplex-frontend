@@ -1,5 +1,5 @@
-import ShopSidebar from '@/src/components/sidebar/ShopSidebar';
-import { ShopProvider } from '@/src/context/ShopContext';
+import ShopSidebar from "@/src/components/sidebar/ShopSidebar";
+import { ShopProvider } from "@/src/context/ShopContext";
 
 export default function layout({ children }: { children: React.ReactNode }) {
   return (

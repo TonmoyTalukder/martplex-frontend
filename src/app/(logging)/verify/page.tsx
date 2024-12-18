@@ -46,6 +46,10 @@ export default function VerifyPage() {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <h3 className="mb-4 text-2xl font-bold">Verify</h3>
+      <p>
+        Use &apos;testVerify&apos; code incase you are not using any valid
+        email.
+      </p>
       <div className="w-[75%] md:w-[55%] lg:w-[35%]">
         {verifyCode ? (
           <p className="text-center">You are verified successfully.</p>
