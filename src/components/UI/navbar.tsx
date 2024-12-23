@@ -24,6 +24,8 @@ import { ThemeSwitch } from '@/src/components/UI/theme-switch';
 import { SearchIcon, Logo } from '@/src/components/UI/icons';
 import { logout } from '@/src/services/AuthService';
 import { useUser } from '@/src/context/user.provider';
+import { useFetchCart } from '@/src/hooks/cart.hooks';
+import { useEffect, useState } from 'react';
 
 export const Navbar = () => {
   const { user } = useUser();
@@ -31,6 +33,17 @@ export const Navbar = () => {
   const avatarUrl =
     user?.profilePhoto || 'https://i.ibb.co.com/wcv1QBQ/5951752.png';
   const profileId = user?.id;
+
+  const { data: cartData, isLoading, isError } = useFetchCart(profileId!);
+  const cart = cartData?.data?.cartInfo;
+  const [cartLength, setCartLength] = useState(0);
+
+  useEffect(() => {
+    // Update cart length dynamically when cart data changes
+    if (cart) {
+      setCartLength(cart.items.length);
+    }
+  }, [cart]);
 
   const searchInput = (
     <Input
@@ -110,7 +123,7 @@ export const Navbar = () => {
             <Badge
               className=" transform hover:scale-110 transition-transform"
               color="danger"
-              content="0"
+              content={cartLength}
             >
               <FaShoppingCart
                 className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transform"

@@ -11,6 +11,7 @@ import {
   Image,
   Divider,
 } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 
 interface ProductCardProps {
   product: {
@@ -26,6 +27,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const router = useRouter();
   const { mutate: createCartMutation, isPending: isCreatingCart } =
     useCreateCart();
   const { user } = useUser();
@@ -47,6 +49,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : price.toFixed(2);
 
   const handleAddToCart = () => {
+    if (!userId) {
+      // Redirect to login page if user is not logged in
+      router.push('/login');
+      return;
+    }
+
     const payload = {
       userId,
       vendorStandId: vendorStand.id,

@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@nextui-org/react';
 import { useUser } from '@/src/context/user.provider';
+import { useCreateOrder } from '@/src/hooks/order.hooks';
 
 const Cart = () => {
   const { user } = useUser();
@@ -26,6 +27,8 @@ const Cart = () => {
   // Mutation hooks
   const updateCartItemMutation = useUpdateCartItem();
   const deleteCartItemMutation = useDeleteCartItem();
+  const { mutate: createOrderMutation, isPending: isCreatingOrder } =
+    useCreateOrder();
 
   const cart = cartData?.data?.cartInfo;
 
@@ -69,13 +72,46 @@ const Cart = () => {
     }
   };
 
+  const finalPrice = cart?.items.reduce(
+    (total: any, item: any) => total + item.price,
+    0,
+  );
+
   // Handle place order
   const handlePlaceOrder = async () => {
+    if (!cart || !cart.items || cart.items.length === 0) {
+      alert('Your cart is empty. Add items before placing an order.');
+      return;
+    }
+
+    const payload = {
+      userId,
+      vendorStandId: cart.vendorId,
+      totalAmount: finalPrice,
+      items: cart.items.map((item: any) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.quantity * item.price,
+      })), // Ensures items is always an array
+      cartId: cart.id,
+    };
+
     try {
-      alert('Order placed successfully!');
-      // Additional logic for placing an order can be added here
+      console.log('Order payload: ', payload);
+
+      // Show a loading indicator during the process
+      await createOrderMutation(payload);
+
+      // Optional: Perform any post-order actions (e.g., clear cart, redirect)
     } catch (error: any) {
       console.error('Error placing order:', error);
+
+      // Provide detailed feedback to the user
+      alert(
+        error?.response?.data?.message ||
+          'Failed to place the order. Try again.',
+      );
     }
   };
 
@@ -148,8 +184,12 @@ const Cart = () => {
             </TableBody>
           </Table>
           <div className="flex justify-end mt-4">
-            <Button color="success" onClick={handlePlaceOrder}>
-              Place Order
+            <Button
+              color="success"
+              onClick={handlePlaceOrder}
+              isDisabled={isCreatingOrder} // Prevent multiple clicks during loading
+            >
+              {isCreatingOrder ? 'Placing Order...' : 'Place Order'}
             </Button>
           </div>
         </>
