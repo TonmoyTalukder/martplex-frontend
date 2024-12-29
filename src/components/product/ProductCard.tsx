@@ -10,6 +10,7 @@ import {
   Button,
   Image,
   Divider,
+  Tooltip,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 
@@ -95,15 +96,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-end px-4 py-2">
-        <Button
-          className="text-white"
-          color="primary"
-          variant="solid"
-          onClick={handleAddToCart}
-          disabled={isCreatingCart}
-        >
-          {isCreatingCart ? 'Adding...' : 'Add to Cart'}
-        </Button>
+        { user && user?.role !== 'CUSTOMER' ? (
+          <Tooltip content="Only customer can buy" placement="top">
+            <Button
+              className="text-white"
+              color="primary"
+              variant="solid"
+              disabled
+            >
+              Add to Cart
+            </Button>
+          </Tooltip>
+        ) : (
+          <Button
+            className="text-white"
+            color="primary"
+            variant="solid"
+            onClick={handleAddToCart}
+            disabled={isCreatingCart}
+          >
+            {isCreatingCart ? 'Adding...' : 'Add to Cart'}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

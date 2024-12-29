@@ -28,10 +28,11 @@ export const useCreateCart = () => {
 
 export const useFetchCart = (id: string) => {
   return useQuery({
-    queryKey: ['GET_CART'],
+    queryKey: ["GET_CART"],
     // queryFn: fetchCart(id),
     queryFn: () => {
       const data = fetchCart(id);
+      
       return data;
     },
     enabled: !!id,
@@ -80,7 +81,7 @@ export const useDeleteCartItem = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id}: { id: string }) => {
+    mutationFn: ({ id }: { id: string }) => {
       return deleteCartItem(id);
     },
     onSuccess: () => {

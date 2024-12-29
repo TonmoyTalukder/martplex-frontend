@@ -26,15 +26,19 @@ import { logout } from '@/src/services/AuthService';
 import { useUser } from '@/src/context/user.provider';
 import { useFetchCart } from '@/src/hooks/cart.hooks';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+// import { LoginNavbar } from './loginNavbar';
 
 export const Navbar = () => {
+  const router = useRouter();
+
   const { user } = useUser();
 
   const avatarUrl =
     user?.profilePhoto || 'https://i.ibb.co.com/wcv1QBQ/5951752.png';
   const profileId = user?.id;
 
-  const { data: cartData, isLoading, isError } = useFetchCart(profileId!);
+  const { data: cartData } = useFetchCart(profileId || '');
   const cart = cartData?.data?.cartInfo;
   const [cartLength, setCartLength] = useState(0);
 
@@ -44,6 +48,10 @@ export const Navbar = () => {
       setCartLength(cart.items.length);
     }
   }, [cart]);
+
+  const handleLogin = () => {
+    router.push('/login');
+  };
 
   const searchInput = (
     <Input
@@ -114,21 +122,25 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2 items-center">
-          <Link href={user ? `/profile/${profileId}` : '/login'}>
-            <Avatar size="sm" src={avatarUrl} />
-          </Link>
+          {user ? (
+            <Link href={`/profile/${profileId}`}>
+              <Avatar size="sm" src={avatarUrl} />
+            </Link>
+          ) : (
+            <p>
+              <Button className='bg-transparent text-blue-500' onClick={handleLogin}>Login</Button>
+            </p>
+          )}
+
           <ThemeSwitch />
           {/* <FaShoppingCart className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transfor" /> */}
           <Link href="/cart">
             <Badge
               className=" transform hover:scale-110 transition-transform"
               color="danger"
-              content={cartLength}
+              content={user ? cartLength : 0}
             >
-              <FaShoppingCart
-                className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transform"
-                // onClick={() => router.push('/cart')}
-              />
+              <FaShoppingCart className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transform" />
             </Badge>
           </Link>
         </NavbarItem>
