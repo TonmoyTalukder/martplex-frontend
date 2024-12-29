@@ -39,8 +39,13 @@ export default function LoginPage() {
     }
   }, [status, onOpen]);
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    handleUserLogin(data);
+  const onSubmit: SubmitHandler<FieldValues> = () => {
+    const loggingData = {
+      email,
+      password,
+    };
+
+    handleUserLogin(loggingData);
     userLoading(true);
   };
 
@@ -56,14 +61,14 @@ export default function LoginPage() {
 
   const handleTestCredentials = (role: string) => {
     if (role === 'admin') {
-      setEmail('admin@example.com');
-      setPassword('admin123');
+      setEmail('admin.ph@mail.com');
+      setPassword('123456');
     } else if (role === 'vendor') {
-      setEmail('vendor@example.com');
-      setPassword('vendor123');
+      setEmail('hermione@gmail.com');
+      setPassword('123456');
     } else {
-      setEmail('user@example.com');
-      setPassword('user123');
+      setEmail('user@test.com');
+      setPassword('123456');
     }
   };
 
@@ -98,9 +103,7 @@ export default function LoginPage() {
 
           {/* Right Column */}
           <div className="flex flex-col items-center justify-center w-full p-6 space-y-4 md:w-1/2">
-            <h2 className="text-3xl font-semibold text-center">
-              Login
-            </h2>
+            <h2 className="text-3xl font-semibold text-center">Login</h2>
 
             <div className="w-full p-4 mt-4 border rounded-lg border-dashed border-blue-500">
               <p className="mb-2 text-center">
