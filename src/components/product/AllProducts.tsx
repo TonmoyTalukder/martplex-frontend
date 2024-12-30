@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
-import { Spinner, Select, SelectItem } from '@nextui-org/react';
+import { useState, useMemo } from "react";
+import { Spinner, Select, SelectItem } from "@nextui-org/react";
 
-import ProductCard from './ProductCard';
+import ProductCard from "./ProductCard";
 
-import { useGetAllProducts } from '@/src/hooks/product.hooks';
+import { useGetAllProducts } from "@/src/hooks/product.hooks";
 
 const AllProducts = () => {
   const {
@@ -14,20 +14,20 @@ const AllProducts = () => {
     isError,
     error,
   } = useGetAllProducts();
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   // Extract unique categories
   const categories: string[] = useMemo(() => {
     const allCategories = products?.data?.map(
-      (product: any) => product.category?.name || 'Unknown',
+      (product: any) => product.category?.name || "Unknown",
     );
 
-    return ['All', ...Array.from(new Set<string>(allCategories))];
+    return ["All", ...Array.from(new Set<string>(allCategories))];
   }, [products]);
 
   // Filter products by selected category
   const filteredProducts = useMemo(() => {
-    if (selectedCategory === 'All') return products?.data;
+    if (selectedCategory === "All") return products?.data;
 
     return products?.data?.filter(
       (product: any) => product.category?.name === selectedCategory,
@@ -35,7 +35,7 @@ const AllProducts = () => {
   }, [selectedCategory, products]);
 
   if (isError) {
-    console.log('Product Fetching Error: ', error);
+    console.log("Product Fetching Error: ", error);
   }
 
   return (

@@ -43,3 +43,80 @@ export interface IUser {
   iat?: number;
   exp?: number;
 }
+
+export interface IOrder {
+  id: string;
+  userId: string;
+  vendorStandId: string;
+  totalAmount: number;
+  deliveryAddress?: string;
+  deliveryPhone?: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  items: Array<any>;
+  payment: {
+    id: string;
+    transactionId: string | null;
+    orderId: string;
+    vendorStandId: string;
+    amount: number;
+  };
+}
+
+export interface IPaymentMethod {
+  Online: "Online";
+  COD: "COD";
+}
+
+export interface UpdatePaymentPayload {
+  paymentId: string;
+  paymentMethod: "Online" | "COD";
+  userId: string;
+  deliveryAddress: string;
+  deliveryPhone: string;
+}
+
+interface IPayment {
+  id: string;
+  transactionId: string | null;
+  orderId: string;
+  vendorStandId: string;
+  amount: number;
+}
+
+export interface IOrderResponse {
+  id: string;
+  userId: string;
+  vendorStandId: string;
+  deliveryAddress: string | null;
+  deliveryPhone: string | null;
+  totalAmount: number;
+  status: string;
+  payment: IPayment;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CODPaymentData {
+  id: string;
+  transactionId: string | null;
+  orderId: string;
+  vendorStandId: string;
+  amount: number;
+  paymentMethod: "COD";
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface OnlinePaymentData {
+  result: string;
+  payment_url: string;
+}
+
+export type UpdatePaymentResponse = {
+  success: boolean;
+  message: string;
+  data: CODPaymentData | OnlinePaymentData;
+};

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Navbar as NextUINavbar,
@@ -8,25 +8,25 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from '@nextui-org/navbar';
-import { Button } from '@nextui-org/button';
-import { Kbd } from '@nextui-org/kbd';
-import { Link } from '@nextui-org/link';
-import { Input } from '@nextui-org/input';
-import { link as linkStyles } from '@nextui-org/theme';
-import NextLink from 'next/link';
-import clsx from 'clsx';
-import { Avatar, Badge } from '@nextui-org/react';
-import { FaShoppingCart } from 'react-icons/fa';
+} from "@nextui-org/navbar";
+import { Button } from "@nextui-org/button";
+import { Kbd } from "@nextui-org/kbd";
+import { Link } from "@nextui-org/link";
+import { Input } from "@nextui-org/input";
+import { link as linkStyles } from "@nextui-org/theme";
+import NextLink from "next/link";
+import clsx from "clsx";
+import { Avatar, Badge } from "@nextui-org/react";
+import { FaShoppingCart } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { siteConfig } from '@/src/config/site';
-import { ThemeSwitch } from '@/src/components/UI/theme-switch';
-import { SearchIcon, Logo } from '@/src/components/UI/icons';
-import { logout } from '@/src/services/AuthService';
-import { useUser } from '@/src/context/user.provider';
-import { useFetchCart } from '@/src/hooks/cart.hooks';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { siteConfig } from "@/src/config/site";
+import { ThemeSwitch } from "@/src/components/UI/theme-switch";
+import { SearchIcon, Logo } from "@/src/components/UI/icons";
+import { logout } from "@/src/services/AuthService";
+import { useUser } from "@/src/context/user.provider";
+import { useFetchCart } from "@/src/hooks/cart.hooks";
 // import { LoginNavbar } from './loginNavbar';
 
 export const Navbar = () => {
@@ -35,10 +35,10 @@ export const Navbar = () => {
   const { user } = useUser();
 
   const avatarUrl =
-    user?.profilePhoto || 'https://i.ibb.co.com/wcv1QBQ/5951752.png';
+    user?.profilePhoto || "https://i.ibb.co.com/wcv1QBQ/5951752.png";
   const profileId = user?.id;
 
-  const { data: cartData } = useFetchCart(profileId || '');
+  const { data: cartData } = useFetchCart(profileId || "");
   const cart = cartData?.data?.cartInfo;
   const [cartLength, setCartLength] = useState(0);
 
@@ -50,18 +50,18 @@ export const Navbar = () => {
   }, [cart]);
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push("/login");
   };
 
   const searchInput = (
     <Input
       aria-label="Search"
       classNames={{
-        inputWrapper: 'bg-default-100',
-        input: 'text-sm',
+        inputWrapper: "bg-default-100",
+        input: "text-sm",
       }}
       endContent={
-        <Kbd className="hidden lg:inline-block" keys={['command']}>
+        <Kbd className="hidden lg:inline-block" keys={["command"]}>
           K
         </Kbd>
       }
@@ -88,8 +88,8 @@ export const Navbar = () => {
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
-                  linkStyles({ color: 'foreground' }),
-                  'data-[active=true]:text-primary data-[active=true]:font-medium',
+                  linkStyles({ color: "foreground" }),
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
                 href={item.href}
@@ -103,8 +103,8 @@ export const Navbar = () => {
           {user && (
             <Button
               className={clsx(
-                linkStyles({ color: 'foreground' }),
-                'data-[active=true]:text-primary data-[active=true]:font-medium',
+                linkStyles({ color: "foreground" }),
+                "data-[active=true]:text-primary data-[active=true]:font-medium",
               )}
               // color="foreground"
               onClick={() => {
@@ -128,7 +128,12 @@ export const Navbar = () => {
             </Link>
           ) : (
             <p>
-              <Button className='bg-transparent text-blue-500' onClick={handleLogin}>Login</Button>
+              <Button
+                className="bg-transparent text-blue-500"
+                onClick={handleLogin}
+              >
+                Login
+              </Button>
             </p>
           )}
 
@@ -160,10 +165,10 @@ export const Navbar = () => {
               <Link
                 color={
                   index === 2
-                    ? 'primary'
+                    ? "primary"
                     : index === siteConfig.navMenuItems.length - 1
-                      ? 'danger'
-                      : 'foreground'
+                      ? "danger"
+                      : "foreground"
                 }
                 href="#"
                 size="lg"

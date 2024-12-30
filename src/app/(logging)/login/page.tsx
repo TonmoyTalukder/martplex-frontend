@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   useDisclosure,
@@ -9,32 +9,32 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from '@nextui-org/react';
-import Link from 'next/link';
-import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { TbArrowLeftDashed } from 'react-icons/tb';
+} from "@nextui-org/react";
+import Link from "next/link";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TbArrowLeftDashed } from "react-icons/tb";
+import Image from "next/image";
 
-import CFInput from '@/src/components/form/CFInput';
-import CFForm from '@/src/components/form/CFForm';
-import { useUserLogin } from '@/src/hooks/auth.hooks';
-import { useUser } from '@/src/context/user.provider';
-import Image from 'next/image';
+import CFInput from "@/src/components/form/CFInput";
+import CFForm from "@/src/components/form/CFForm";
+import { useUserLogin } from "@/src/hooks/auth.hooks";
+import { useUser } from "@/src/context/user.provider";
 
 export default function LoginPage() {
   const { setIsLoading: userLoading } = useUser();
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const redirect = searchParams.get('redirect');
-  const status = searchParams.get('status');
+  const redirect = searchParams.get("redirect");
+  const status = searchParams.get("status");
   const { isOpen: isBlockedModalOpen, onOpen, onClose } = useDisclosure();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (status === 'blocked') {
+    if (status === "blocked") {
       onOpen();
     }
   }, [status, onOpen]);
@@ -54,21 +54,21 @@ export default function LoginPage() {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.push('/');
+        router.push("/");
       }
     }
   }, [isPending, isSuccess, redirect, router]);
 
   const handleTestCredentials = (role: string) => {
-    if (role === 'admin') {
-      setEmail('admin.ph@mail.com');
-      setPassword('123456');
-    } else if (role === 'vendor') {
-      setEmail('hermione@gmail.com');
-      setPassword('123456');
+    if (role === "admin") {
+      setEmail("admin.ph@mail.com");
+      setPassword("123456");
+    } else if (role === "vendor") {
+      setEmail("hermione@gmail.com");
+      setPassword("123456");
     } else {
-      setEmail('user@test.com');
-      setPassword('123456');
+      setEmail("user@test.com");
+      setPassword("123456");
     }
   };
 
@@ -94,9 +94,9 @@ export default function LoginPage() {
               </svg> */}
               <Image
                 alt="Credential Banner Image"
-                width={300}
                 height={128}
                 src="/Credential.png"
+                width={300}
               />
             </div>
           </div>
@@ -112,19 +112,19 @@ export default function LoginPage() {
               <div className="flex flex-wrap justify-center gap-2">
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
-                  onPress={() => handleTestCredentials('admin')}
+                  onPress={() => handleTestCredentials("admin")}
                 >
                   Admin
                 </Button>
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
-                  onPress={() => handleTestCredentials('vendor')}
+                  onPress={() => handleTestCredentials("vendor")}
                 >
                   Vendor
                 </Button>
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
-                  onPress={() => handleTestCredentials('user')}
+                  onPress={() => handleTestCredentials("user")}
                 >
                   User
                 </Button>
@@ -162,8 +162,8 @@ export default function LoginPage() {
 
             <div className="text-sm text-center">
               <Link
-                href="/forget-password"
                 className="text-blue-600 hover:underline"
+                href="/forget-password"
               >
                 Forgot Password?
               </Link>
@@ -171,13 +171,13 @@ export default function LoginPage() {
 
             <div className="text-sm text-center">
               Don’t have an account?&nbsp;
-              <Link href="/signup" className="text-blue-600 hover:underline">
+              <Link className="text-blue-600 hover:underline" href="/signup">
                 Sign Up
               </Link>
             </div>
             <Button
               className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500"
-              onPress={() => router.push('/')}
+              onPress={() => router.push("/")}
             >
               <TbArrowLeftDashed /> Back to Home
             </Button>

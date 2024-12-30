@@ -1,10 +1,5 @@
-'use client';
+"use client";
 
-import {
-  useFetchCart,
-  useUpdateCartItem,
-  useDeleteCartItem,
-} from '@/src/hooks/cart.hooks';
 import {
   Button,
   Table,
@@ -13,9 +8,17 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/react';
-import { useUser } from '@/src/context/user.provider';
-import { useCreateOrder } from '@/src/hooks/order.hooks';
+} from "@nextui-org/react";
+import { useState } from "react";
+
+import {
+  useFetchCart,
+  useUpdateCartItem,
+  useDeleteCartItem,
+} from "@/src/hooks/cart.hooks";
+import { useUser } from "@/src/context/user.provider";
+import { useCreateOrder } from "@/src/hooks/order.hooks";
+import PaymentModal from "@/src/components/modal/PaymentModal";
 
 const Cart = () => {
   const { user } = useUser();
@@ -30,23 +33,31 @@ const Cart = () => {
   const { mutate: createOrderMutation, isPending: isCreatingOrder } =
     useCreateOrder();
 
+  const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+
   const cart = cartData?.data?.cartInfo;
 
   console.log(cart);
+
+  if (cart === undefined) return <p>Your cart is empty.</p>;
 
   // Handle increment/decrement item quantity
   const handleQuantityChange = async (
     cartItemId: string,
     productId: string,
-    action: 'increment' | 'decrement',
+    action: "increment" | "decrement",
   ) => {
     const item = cart?.items.find((item: any) => item.productId === productId);
+
     if (!item) return;
 
     const newQuantity =
-      action === 'increment' ? item.quantity + 1 : item.quantity - 1;
+      action === "increment" ? item.quantity + 1 : item.quantity - 1;
+
     if (newQuantity <= 0) {
       handleRemoveItem(cartItemId);
+
       return;
     }
 
@@ -59,7 +70,7 @@ const Cart = () => {
         },
       });
     } catch (error: any) {
-      console.error('Error updating cart item:', error);
+      console.error("Error updating cart item:", error);
     }
   };
 
@@ -68,7 +79,7 @@ const Cart = () => {
     try {
       await deleteCartItemMutation.mutateAsync({ id: cartItemId });
     } catch (error: any) {
-      console.error('Error removing item from cart:', error);
+      console.error("Error removing item from cart:", error);
     }
   };
 
@@ -80,7 +91,8 @@ const Cart = () => {
   // Handle place order
   const handlePlaceOrder = async () => {
     if (!cart || !cart.items || cart.items.length === 0) {
-      alert('Your cart is empty. Add items before placing an order.');
+      alert("Your cart is empty. Add items before placing an order.");
+
       return;
     }
 
@@ -98,19 +110,33 @@ const Cart = () => {
     };
 
     try {
-      console.log('Order payload: ', payload);
+      console.log("Order payload: ", payload);
 
-      // Show a loading indicator during the process
-      await createOrderMutation(payload);
+      await createOrderMutation(payload, {
+        onSuccess: (order) => {
+          const paymentId = order?.payment.id;
 
+          console.log("Payment ID:", paymentId);
+          setPaymentId(order?.payment.id);
+          setPaymentModalOpen(true);
+        },
+        onError: (error) => {
+          console.error("Error creating order:", error);
+        },
+      });
+
+      // const order = await createOrderMutation(payload);
+
+      // setPaymentId(order?.payment.id);
+      // setPaymentModalOpen(true);
       // Optional: Perform any post-order actions (e.g., clear cart, redirect)
     } catch (error: any) {
-      console.error('Error placing order:', error);
+      console.error("Error placing order:", error);
 
       // Provide detailed feedback to the user
       alert(
         error?.response?.data?.message ||
-          'Failed to place the order. Try again.',
+          "Failed to place the order. Try again.",
       );
     }
   };
@@ -128,7 +154,7 @@ const Cart = () => {
           <Table
             aria-label="Cart Items"
             shadow="sm"
-            style={{ height: 'auto', minWidth: '100%' }}
+            style={{ height: "auto", minWidth: "100%" }}
           >
             <TableHeader>
               <TableColumn>Name</TableColumn>
@@ -148,33 +174,33 @@ const Cart = () => {
                   </TableCell>
                   <TableCell>
                     <Button
+                      size="sm"
                       onClick={() =>
                         handleQuantityChange(
                           item.id,
                           item.productId,
-                          'increment',
+                          "increment",
                         )
                       }
-                      size="sm"
                     >
                       +
                     </Button>
                     <Button
+                      size="sm"
                       onClick={() =>
                         handleQuantityChange(
                           item.id,
                           item.productId,
-                          'decrement',
+                          "decrement",
                         )
                       }
-                      size="sm"
                     >
                       -
                     </Button>
                     <Button
-                      onClick={() => handleRemoveItem(item.id)}
-                      size="sm"
                       color="danger"
+                      size="sm"
+                      onClick={() => handleRemoveItem(item.id)}
                     >
                       Remove
                     </Button>
@@ -186,14 +212,21 @@ const Cart = () => {
           <div className="flex justify-end mt-4">
             <Button
               color="success"
-              onClick={handlePlaceOrder}
               isDisabled={isCreatingOrder} // Prevent multiple clicks during loading
+              onClick={handlePlaceOrder}
             >
-              {isCreatingOrder ? 'Placing Order...' : 'Place Order'}
+              {isCreatingOrder ? "Placing Order..." : "Place Order"}
             </Button>
           </div>
         </>
       )}
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        paymentId={paymentId}
+        userId={userId}
+        onClose={() => setPaymentModalOpen(false)}
+      />
     </div>
   );
 };

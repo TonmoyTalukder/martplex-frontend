@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-import { useUser } from '@/src/context/user.provider';
-import { useCreateCart } from '@/src/hooks/cart.hooks';
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -11,8 +10,11 @@ import {
   Image,
   Divider,
   Tooltip,
-} from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+} from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+
+import { useUser } from "@/src/context/user.provider";
+import { useCreateCart, useFetchCart } from "@/src/hooks/cart.hooks";
 
 interface ProductCardProps {
   product: {
@@ -34,6 +36,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { user } = useUser();
   const userId = user?.id;
 
+  const { data: cartData } = useFetchCart(userId || "");
+  const cart = cartData?.data?.cartInfo;
+
+  console.log("cart ", cart);
+
   const {
     id,
     name,
@@ -49,11 +56,35 @@ const ProductCard = ({ product }: ProductCardProps) => {
     ? (price - price * (discount / 100)).toFixed(2)
     : price.toFixed(2);
 
+  // State to control tooltip visibility
+  const [showVendorTooltip, setShowVendorTooltip] = useState(false);
+
+  // Automatically hide the tooltip after a certain time
+  useEffect(() => {
+    if (showVendorTooltip) {
+      const timer = setTimeout(() => setShowVendorTooltip(false), 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showVendorTooltip]);
+
   const handleAddToCart = () => {
     if (!userId) {
       // Redirect to login page if user is not logged in
-      router.push('/login');
+      router.push("/login");
+
       return;
+    }
+
+    if (cart?.items?.length > 0 && cart?.vendorId !== vendorStand.id) {
+      console.log("cart?.vendorStandId ", cart?.vendorId);
+      console.log("vendorStand.id ", vendorStand.id);
+      // Trigger the tooltip to show the restriction message
+      setShowVendorTooltip(true);
+
+      return;
+    } else {
+      setShowVendorTooltip(false);
     }
 
     const payload = {
@@ -71,13 +102,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Image
         alt={name}
         className="w-full h-48 object-cover"
-        src={images[0] || 'https://i.ibb.co.com/t8FQT4M/7867792.png'}
+        src={images[0] || "https://i.ibb.co.com/t8FQT4M/7867792.png"}
       />
       <CardHeader className="flex justify-between items-center px-4 py-2">
         <div>
           <h2 className="text-xl font-semibold">{name}</h2>
           <p className="text-sm text-gray-500">
-            {vendorStand?.name || 'Unknown Vendor'}
+            {vendorStand?.name || "Unknown Vendor"}
           </p>
         </div>
         <div className="text-right flex flex-col">
@@ -96,27 +127,37 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-end px-4 py-2">
-        { user && user?.role !== 'CUSTOMER' ? (
-          <Tooltip content="Only customer can buy" placement="top">
+        {user && user?.role !== "CUSTOMER" ? (
+          <Tooltip content="Only customers can buy" placement="top">
             <Button
+              disabled
               className="text-white"
               color="primary"
               variant="solid"
-              disabled
             >
               Add to Cart
             </Button>
           </Tooltip>
         ) : (
-          <Button
-            className="text-white"
-            color="primary"
-            variant="solid"
-            onClick={handleAddToCart}
-            disabled={isCreatingCart}
+          <Tooltip
+            content={
+              showVendorTooltip
+                ? "You can only add products from one vendor at a time."
+                : "Add to Cart"
+            }
+            isOpen={showVendorTooltip}
+            placement="top"
           >
-            {isCreatingCart ? 'Adding...' : 'Add to Cart'}
-          </Button>
+            <Button
+              className="text-white"
+              color="primary"
+              disabled={isCreatingCart}
+              variant="solid"
+              onClick={handleAddToCart}
+            >
+              {isCreatingCart ? "Adding..." : "Add to Cart"}
+            </Button>
+          </Tooltip>
         )}
       </CardFooter>
     </Card>

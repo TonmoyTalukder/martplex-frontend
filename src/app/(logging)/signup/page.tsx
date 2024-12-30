@@ -1,19 +1,19 @@
 /* eslint-disable no-console */
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@nextui-org/button';
-import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { NextPage } from 'next';
-import { TbArrowLeftDashed } from 'react-icons/tb';
+import { useState, useEffect } from "react";
+import { Button } from "@nextui-org/button";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { NextPage } from "next";
+import { TbArrowLeftDashed } from "react-icons/tb";
+import Image from "next/image";
 
-import CFForm from '@/src/components/form/CFForm';
-import CFInput from '@/src/components/form/CFInput';
-import { useUser } from '@/src/context/user.provider';
-import { useUserRegistration } from '@/src/hooks/auth.hooks';
-import Image from 'next/image';
+import CFForm from "@/src/components/form/CFForm";
+import CFInput from "@/src/components/form/CFInput";
+import { useUser } from "@/src/context/user.provider";
+import { useUserRegistration } from "@/src/hooks/auth.hooks";
 
 const SignUpPage: NextPage = () => {
   const { setIsLoading: userLoading } = useUser();
@@ -24,16 +24,16 @@ const SignUpPage: NextPage = () => {
   } = useUserRegistration();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const redirect = searchParams.get('redirect');
+  const redirect = searchParams.get("redirect");
 
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async () => {
@@ -41,7 +41,7 @@ const SignUpPage: NextPage = () => {
       ...formData,
     };
 
-    console.log('Sign Up Data =>', userData);
+    console.log("Sign Up Data =>", userData);
 
     handleUserSignUp(userData);
     userLoading(true);
@@ -52,7 +52,7 @@ const SignUpPage: NextPage = () => {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.replace('/verify');
+        router.replace("/verify");
       }
     }
   }, [isPending, isSuccess]);
@@ -81,7 +81,7 @@ const SignUpPage: NextPage = () => {
   };
 
   const handleInputChange = (name: string, value: string) => {
-    console.log('Input change detected:', name, value);
+    console.log("Input change detected:", name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -213,9 +213,9 @@ const SignUpPage: NextPage = () => {
               </svg> */}
               <Image
                 alt="Credential Banner Image"
-                width={300}
                 height={128}
                 src="/Credential.png"
+                width={300}
               />
             </div>
           </div>
@@ -236,7 +236,7 @@ const SignUpPage: NextPage = () => {
                         name="name"
                         type="text"
                         onChange={(e) =>
-                          handleInputChange('name', e.target.value)
+                          handleInputChange("name", e.target.value)
                         }
                       />
                     </div>
@@ -247,7 +247,7 @@ const SignUpPage: NextPage = () => {
                         name="email"
                         type="email"
                         onChange={(e) =>
-                          handleInputChange('email', e.target.value)
+                          handleInputChange("email", e.target.value)
                         }
                       />
                     </div>
@@ -259,19 +259,19 @@ const SignUpPage: NextPage = () => {
                         // type="tel"
                         type="text"
                         onChange={(e) =>
-                          handleInputChange('phoneNumber', e.target.value)
+                          handleInputChange("phoneNumber", e.target.value)
                         }
                       />
                     </div>
 
                     <Button
-                        className="w-full bg-blue-950 hover:bg-blue-500 rounded-md font-semibold my-3 text-white"
-                        size="lg"
-                        type="button"
-                        onClick={nextStep}
-                      >
-                        Next
-                      </Button>
+                      className="w-full bg-blue-950 hover:bg-blue-500 rounded-md font-semibold my-3 text-white"
+                      size="lg"
+                      type="button"
+                      onClick={nextStep}
+                    >
+                      Next
+                    </Button>
                   </>
                 )}
 
@@ -284,7 +284,7 @@ const SignUpPage: NextPage = () => {
                         name="password"
                         type="password"
                         onChange={(e) =>
-                          handleInputChange('password', e.target.value)
+                          handleInputChange("password", e.target.value)
                         }
                       />
                     </div>
@@ -295,7 +295,7 @@ const SignUpPage: NextPage = () => {
                         name="confirm_password"
                         type="password"
                         onChange={(e) =>
-                          handleInputChange('confirmPassword', e.target.value)
+                          handleInputChange("confirmPassword", e.target.value)
                         }
                       />
                     </div>
@@ -325,13 +325,13 @@ const SignUpPage: NextPage = () => {
 
             <div className="text-sm text-center">
               Don’t have an account?&nbsp;
-              <Link href="/login" className="text-blue-600 hover:underline">
+              <Link className="text-blue-600 hover:underline" href="/login">
                 Login here
               </Link>
             </div>
             <Button
               className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500"
-              onPress={() => router.push('/')}
+              onPress={() => router.push("/")}
             >
               <TbArrowLeftDashed /> Back to Home
             </Button>
