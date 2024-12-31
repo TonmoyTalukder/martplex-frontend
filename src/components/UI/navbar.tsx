@@ -10,6 +10,8 @@ import {
   Avatar,
 } from '@nextui-org/react';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
+import { SlMenu } from 'react-icons/sl';
+import { IoIosArrowDown } from 'react-icons/io';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -42,12 +44,12 @@ export const Navbar = () => {
   };
 
   const handleCategoryClick = (category: any) => {
-    router.push(`/product?category=${category}`);
+    router.push(`/product?category=${encodeURIComponent(category)}`);
   };
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      router.push(`/product?searchTerm=${searchTerm}`);
+      router.push(`/product?searchTerm=${encodeURIComponent(searchTerm)}`);
     }
   };
 
@@ -60,8 +62,15 @@ export const Navbar = () => {
   const megaMenu = (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="flat" size="sm" className="font-bold">
-          All Categories
+        <Button
+          variant="flat"
+          size="sm"
+          className="font-bold"
+          style={{
+            fontSize: '1rem',
+          }}
+        >
+          <SlMenu /> All Categories <IoIosArrowDown />
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Categories">
@@ -91,7 +100,12 @@ export const Navbar = () => {
   );
 
   const searchBar = (
-    <div className="flex items-center border rounded-md w-lg lg:w-[40vw] px-3 py-1 shadow-sm">
+    <div
+      className="flex items-center rounded-md w-lg lg:w-[40vw] px-3 py-1 shadow-sm"
+      style={{
+        border: '1px solid #336B92',
+      }}
+    >
       <input
         className="flex-1 outline-none text-gray-700"
         placeholder="Search for products..."
@@ -100,7 +114,16 @@ export const Navbar = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyPress={handleSearchKeyPress}
       />
-      <Button variant="flat" size="sm" onClick={handleSearch}>
+      <Button
+        variant="flat"
+        size="sm"
+        onClick={handleSearch}
+        style={{
+          backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+          backgroundAttachment: 'fixed',
+          color: 'white',
+        }}
+      >
         Search
       </Button>
     </div>
@@ -188,7 +211,36 @@ export const Navbar = () => {
       >
         <div>{megaMenu}</div>
         <div className="hidden lg:flex gap-4">
-          {['Home', 'Products', 'Shops', 'Sale', 'Compare'].map((menu) => (
+          <NextLink
+            key="home"
+            href={`/`}
+            className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+          >
+            Home
+          </NextLink>
+
+          <NextLink
+            key="martolex-origin"
+            href={`/products?martplex=origin`}
+            className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+          >
+            MartPlex Origin
+          </NextLink>
+          <NextLink
+            key="products"
+            href={`/products`}
+            className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+          >
+            Products
+          </NextLink>
+          <NextLink
+            key="sale"
+            href={`/products?sale=true`}
+            className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+          >
+            Sale
+          </NextLink>
+          {['Shops', 'Compare'].map((menu) => (
             <NextLink
               key={menu}
               href={`/${menu.toLowerCase()}`}
@@ -201,8 +253,15 @@ export const Navbar = () => {
         <div className="lg:hidden">
           <Dropdown>
             <DropdownTrigger>
-              <Button variant="flat" size="sm">
-                Menu
+              <Button
+                variant="light"
+                size="sm"
+                className="text-white font-bold"
+                style={{
+                  fontSize: '1.5rem',
+                }}
+              >
+                <SlMenu />
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Other Menus">

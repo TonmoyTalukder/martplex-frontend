@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -10,11 +10,11 @@ import {
   Image,
   Divider,
   Tooltip,
-} from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+} from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 
-import { useUser } from "@/src/context/user.provider";
-import { useCreateCart, useFetchCart } from "@/src/hooks/cart.hooks";
+import { useUser } from '@/src/context/user.provider';
+import { useCreateCart, useFetchCart } from '@/src/hooks/cart.hooks';
 
 interface ProductCardProps {
   product: {
@@ -36,10 +36,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { user } = useUser();
   const userId = user?.id;
 
-  const { data: cartData } = useFetchCart(userId || "");
+  const { data: cartData } = useFetchCart(userId || '');
   const cart = cartData?.data?.cartInfo;
 
-  console.log("cart ", cart);
+  // console.log("cart ", cart);
 
   const {
     id,
@@ -71,14 +71,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const handleAddToCart = () => {
     if (!userId) {
       // Redirect to login page if user is not logged in
-      router.push("/login");
+      router.push('/login');
 
       return;
     }
 
     if (cart?.items?.length > 0 && cart?.vendorId !== vendorStand.id) {
-      console.log("cart?.vendorStandId ", cart?.vendorId);
-      console.log("vendorStand.id ", vendorStand.id);
+      console.log('cart?.vendorStandId ', cart?.vendorId);
+      console.log('vendorStand.id ', vendorStand.id);
       // Trigger the tooltip to show the restriction message
       setShowVendorTooltip(true);
 
@@ -102,13 +102,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Image
         alt={name}
         className="w-full h-48 object-cover"
-        src={images[0] || "https://i.ibb.co.com/t8FQT4M/7867792.png"}
+        src={images[0] || 'https://i.ibb.co.com/t8FQT4M/7867792.png'}
       />
       <CardHeader className="flex justify-between items-center px-4 py-2">
         <div>
           <h2 className="text-xl font-semibold">{name}</h2>
           <p className="text-sm text-gray-500">
-            {vendorStand?.name || "Unknown Vendor"}
+            {vendorStand?.name || 'Unknown Vendor'}
           </p>
         </div>
         <div className="text-right flex flex-col">
@@ -127,13 +127,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </CardBody>
       <Divider />
       <CardFooter className="flex justify-end px-4 py-2">
-        {user && user?.role !== "CUSTOMER" ? (
+        {user && user?.role !== 'CUSTOMER' ? (
           <Tooltip content="Only customers can buy" placement="top">
             <Button
               disabled
-              className="text-white"
               color="primary"
               variant="solid"
+              style={{
+                backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+                backgroundAttachment: 'fixed',
+                color: 'white',
+              }}
             >
               Add to Cart
             </Button>
@@ -142,8 +146,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Tooltip
             content={
               showVendorTooltip
-                ? "You can only add products from one vendor at a time."
-                : "Add to Cart"
+                ? 'You can only add products from one vendor at a time.'
+                : 'Add to Cart'
             }
             isOpen={showVendorTooltip}
             placement="top"
@@ -154,8 +158,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
               disabled={isCreatingCart}
               variant="solid"
               onClick={handleAddToCart}
+              style={{
+                backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+                backgroundAttachment: 'fixed',
+                color: 'white',
+              }}
             >
-              {isCreatingCart ? "Adding..." : "Add to Cart"}
+              {isCreatingCart ? 'Adding...' : 'Add to Cart'}
             </Button>
           </Tooltip>
         )}
