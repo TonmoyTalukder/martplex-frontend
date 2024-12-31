@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useUser } from '@/src/context/user.provider';
+import { useState, useEffect } from "react";
 import {
   Button,
   Pagination,
@@ -13,27 +12,28 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/react';
-import { toast } from 'sonner';
-import clsx from 'clsx';
-import { useDeleteOrder, useGetAllOrdersByUser } from '@/src/hooks/order.hooks';
-import { IOrderResponse } from '@/src/types';
-import PaymentModal from '@/src/components/modal/PaymentModal';
+} from "@nextui-org/react";
+import { toast } from "sonner";
+
+import { useUser } from "@/src/context/user.provider";
+import { useDeleteOrder, useGetAllOrdersByUser } from "@/src/hooks/order.hooks";
+import { IOrderResponse } from "@/src/types";
+import PaymentModal from "@/src/components/modal/PaymentModal";
 
 const paymentFilters = [
-  { key: 'ALL', label: 'All' },
-  { key: 'PAID', label: 'Paid' },
-  { key: 'UNPAID', label: 'Unpaid' },
+  { key: "ALL", label: "All" },
+  { key: "PAID", label: "Paid" },
+  { key: "UNPAID", label: "Unpaid" },
 ];
 
 const statusFilters = [
-  { key: 'ALL', label: 'All Statuses' },
-  { key: 'PENDING', label: 'Pending' },
-  { key: 'CONFIRM', label: 'Confirmed' },
-  { key: 'PROCESSING', label: 'Processing' },
-  { key: 'SHIPPED', label: 'Shipped' },
-  { key: 'DELIVERED', label: 'Delivered' },
-  { key: 'CANCELED', label: 'Canceled' },
+  { key: "ALL", label: "All Statuses" },
+  { key: "PENDING", label: "Pending" },
+  { key: "CONFIRM", label: "Confirmed" },
+  { key: "PROCESSING", label: "Processing" },
+  { key: "SHIPPED", label: "Shipped" },
+  { key: "DELIVERED", label: "Delivered" },
+  { key: "CANCELED", label: "Canceled" },
 ];
 
 const ITEMS_PER_PAGE = 5;
@@ -46,8 +46,8 @@ const OrderPage = () => {
 
   const [orders, setOrders] = useState<IOrderResponse[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<IOrderResponse[]>([]);
-  const [filter, setFilter] = useState('ALL');
-  const [orderStatus, setOrderStatus] = useState('ALL');
+  const [filter, setFilter] = useState("ALL");
+  const [orderStatus, setOrderStatus] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
@@ -56,10 +56,11 @@ const OrderPage = () => {
     if (userId && orderData) {
       try {
         const data: IOrderResponse[] = orderData;
+
         setOrders(data);
         setFilteredOrders(data);
       } catch (error) {
-        toast.error('Failed to fetch orders');
+        toast.error("Failed to fetch orders");
       }
     }
   }, [userId, orderData]);
@@ -77,15 +78,15 @@ const OrderPage = () => {
   const applyFilters = (paymentFilter: string, statusFilter: string) => {
     let filtered = [...orders];
 
-    if (paymentFilter !== 'ALL') {
+    if (paymentFilter !== "ALL") {
       filtered = filtered.filter((order) =>
-        paymentFilter === 'PAID'
+        paymentFilter === "PAID"
           ? order.payment?.transactionId
           : !order.payment?.transactionId,
       );
     }
 
-    if (statusFilter !== 'ALL') {
+    if (statusFilter !== "ALL") {
       filtered = filtered.filter((order) => order.status === statusFilter);
     }
 
@@ -96,11 +97,11 @@ const OrderPage = () => {
   const handleDeleteOrder = async (orderId: string) => {
     try {
       await deleteOrderMutation.mutateAsync({ id: orderId });
-      toast.success('Order deleted successfully');
+      toast.success("Order deleted successfully");
       setOrders(orders.filter((order) => order.id !== orderId));
       setFilteredOrders(filteredOrders.filter((order) => order.id !== orderId));
     } catch (error) {
-      toast.error('Failed to delete order');
+      toast.error("Failed to delete order");
     }
   };
 
@@ -108,11 +109,11 @@ const OrderPage = () => {
     try {
       setPaymentId(payId);
       // Add your payment handling logic here.
-      console.log('Payment initiated for:', { paymentId, userId });
+      console.log("Payment initiated for:", { paymentId, userId });
       setPaymentModalOpen(true);
-      toast.success('Payment processed successfully!');
+      toast.success("Payment processed successfully!");
     } catch (error) {
-      toast.error('Failed to process payment');
+      toast.error("Failed to process payment");
     }
   };
 
@@ -162,16 +163,16 @@ const OrderPage = () => {
               <TableCell>{order.id}</TableCell>
               <TableCell>{order.status}</TableCell>
               <TableCell>
-                {order.payment?.transactionId ? 'Paid' : 'Unpaid'}
+                {order.payment?.transactionId ? "Paid" : "Unpaid"}
               </TableCell>
               <TableCell>
                 {!order.payment?.transactionId && (
                   <>
                     <Button
-                      color="primary"
                       className="mr-2"
+                      color="primary"
                       onClick={() => {
-                        handlePayment(order.payment?.id || '', userId!);
+                        handlePayment(order.payment?.id || "", userId!);
                       }}
                     >
                       Pay

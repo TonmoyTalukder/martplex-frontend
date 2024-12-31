@@ -6,7 +6,6 @@ import { jwtDecode } from "jwt-decode";
 
 import axiosInstance from "@/src/lib/AxiosInstance";
 import ApiError from "@/src/utils/error";
-import { IUser } from "@/src/types";
 
 export const registerUser = async (userData: FieldValues) => {
   try {
@@ -139,12 +138,53 @@ export const logout = () => {
   });
 };
 
-export const getCurrentUser = async () => {
+// export const getCurrentUser = async () => {
+//   let accessToken = cookies().get('accessToken')?.value;
+
+//   try {
+//     if (!accessToken) {
+//       const response = await axiosInstance.post('/refresh-token');
+
+//       accessToken = response.data?.data?.accessToken;
+
+//       if (accessToken) {
+//         cookies().set('accessToken', accessToken);
+//       } else {
+//         return null;
+//       }
+//     }
+
+//     // Decode the access token to extract user details
+//     const decodedToken = await jwtDecode<IUser>(accessToken);
+//     const userData = {
+//       id: decodedToken.id,
+//       email: decodedToken.email,
+//       role: decodedToken.role,
+//       isVerified: decodedToken.isVerified,
+//     };
+
+//     return userData;
+//   } catch (error) {
+//     console.error('Failed to get current user:', error);
+
+//     return null;
+//   }
+// };
+
+interface ICurrentUser {
+  id: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
+  exp: number;
+}
+
+export const getCurrentUser: () => Promise<ICurrentUser | null> = async () => {
   let accessToken = cookies().get("accessToken")?.value;
 
   try {
     if (!accessToken) {
-      const response = await axiosInstance.post("/refresh-token");
+      const response = await axiosInstance.post("/auth/refresh-token");
 
       accessToken = response.data?.data?.accessToken;
 
@@ -156,17 +196,73 @@ export const getCurrentUser = async () => {
     }
 
     // Decode the access token to extract user details
-    const decodedToken = await jwtDecode<IUser>(accessToken);
-    const userData = {
+    const decodedToken = jwtDecode<ICurrentUser>(accessToken);
+
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    const timeToExpire = decodedToken.exp - currentTime;
+
+    // Check if the token is expired or will expire in 5 minutes
+    if (timeToExpire <= 300) {
+      // 5 minutes = 300 seconds
+      const response = await axiosInstance.post("/auth/refresh-token");
+
+      accessToken = response.data?.data?.accessToken;
+
+      if (accessToken) {
+        cookies().set("accessToken", accessToken);
+
+        return getCurrentUser(); // Recursively fetch the user with the new token
+      } else {
+        return null;
+      }
+    }
+
+    const userData: ICurrentUser = {
       id: decodedToken.id,
       email: decodedToken.email,
       role: decodedToken.role,
       isVerified: decodedToken.isVerified,
+      exp: decodedToken.exp, // Include `exp` if you want it available in the return value
     };
 
     return userData;
   } catch (error) {
     console.error("Failed to get current user:", error);
+
+    return null;
+  }
+};
+
+export const getAccessToken: () => Promise<string | null> = async () => {
+  let accessToken = cookies().get("accessToken")?.value;
+
+  try {
+    if (accessToken) {
+      // Decode the token to check its expiration
+      const decodedToken = jwtDecode<ICurrentUser>(accessToken);
+      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+      const timeToExpire = decodedToken.exp - currentTime;
+
+      // If the token is valid for more than 5 minutes, return it
+      if (timeToExpire > 300) {
+        return accessToken;
+      }
+    }
+
+    // If no token or the token is expiring within 5 minutes, refresh it
+    const response = await axiosInstance.post("/auth/refresh-token");
+
+    accessToken = response.data?.data?.accessToken;
+
+    if (accessToken) {
+      cookies().set("accessToken", accessToken);
+
+      return accessToken;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Failed to get access token:", error);
 
     return null;
   }

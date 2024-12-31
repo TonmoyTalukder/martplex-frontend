@@ -13,6 +13,14 @@ const nextConfig = {
       },
     ],
   },
+  theme: {
+    extend: {
+      colors: {
+        'blue-dark': '#336B92',
+        'blue-light': '#8DC2EF',
+      },
+    },
+  },
 };
 
 module.exports = nextConfig;

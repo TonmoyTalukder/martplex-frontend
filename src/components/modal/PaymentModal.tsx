@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -9,11 +9,11 @@ import {
   Input,
   Radio,
   RadioGroup,
-} from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+} from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
-import { useUpdatePayment } from '@/src/hooks/order.hooks';
-import { UpdatePaymentPayload, UpdatePaymentResponse } from '@/src/types';
+import { useUpdatePayment } from "@/src/hooks/order.hooks";
+import { UpdatePaymentPayload, UpdatePaymentResponse } from "@/src/types";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -22,10 +22,10 @@ interface PaymentModalProps {
   paymentId: string | null;
 }
 
-type IPaymentMethod = 'Online' | 'COD';
+type IPaymentMethod = "Online" | "COD";
 
 const isPaymentMethod = (value: string): value is IPaymentMethod => {
-  return value === 'Online' || value === 'COD';
+  return value === "Online" || value === "COD";
 };
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
@@ -39,13 +39,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const { mutate: updatePaymentMutation, isPending: isCreatingOrder } =
     useUpdatePayment();
 
-  const [deliveryAddress, setDeliveryAddress] = useState('');
-  const [deliveryPhone, setDeliveryPhone] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<IPaymentMethod>('Online');
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryPhone, setDeliveryPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<IPaymentMethod>("Online");
 
   const handlePayment = () => {
     if (!userId || !paymentId || !deliveryAddress || !deliveryPhone) {
-      alert('Please fill in all the required fields');
+      alert("Please fill in all the required fields");
 
       return;
     }
@@ -62,22 +62,22 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
     updatePaymentMutation(payload, {
       onSuccess: (data: UpdatePaymentResponse) => {
-        if (paymentMethod === 'Online' && 'payment_url' in data.data) {
+        if (paymentMethod === "Online" && "payment_url" in data.data) {
           // If payment method is Online, redirect to the payment URL
           window.location.href = data.data.payment_url;
-        } else if (paymentMethod === 'COD' && 'orderId' in data.data) {
+        } else if (paymentMethod === "COD" && "orderId" in data.data) {
           // If payment method is COD, show the order ID or take any other action
-          console.log('Order ID for COD:', data.data.orderId);
+          console.log("Order ID for COD:", data.data.orderId);
         }
         // Close the modal after successful update
         onClose();
       },
       onError: (error) => {
-        console.error('Payment update failed:', error);
+        console.error("Payment update failed:", error);
       },
     });
 
-    router.push('/order');
+    router.push("/order");
   };
 
   return (

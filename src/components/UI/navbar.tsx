@@ -1,184 +1,223 @@
-"use client";
+'use client';
 
 import {
-  Navbar as NextUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
-import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
-import { link as linkStyles } from "@nextui-org/theme";
-import NextLink from "next/link";
-import clsx from "clsx";
-import { Avatar, Badge } from "@nextui-org/react";
-import { FaShoppingCart } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { siteConfig } from "@/src/config/site";
-import { ThemeSwitch } from "@/src/components/UI/theme-switch";
-import { SearchIcon, Logo } from "@/src/components/UI/icons";
-import { logout } from "@/src/services/AuthService";
-import { useUser } from "@/src/context/user.provider";
-import { useFetchCart } from "@/src/hooks/cart.hooks";
-// import { LoginNavbar } from './loginNavbar';
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+  Badge,
+  Avatar,
+} from '@nextui-org/react';
+import { FaShoppingCart, FaSearch } from 'react-icons/fa';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useUser } from '@/src/context/user.provider';
+import { useFetchCart } from '@/src/hooks/cart.hooks';
 
 export const Navbar = () => {
   const router = useRouter();
-
   const { user } = useUser();
 
   const avatarUrl =
-    user?.profilePhoto || "https://i.ibb.co.com/wcv1QBQ/5951752.png";
+    user?.profilePhoto || 'https://i.ibb.co/wcv1QBQ/5951752.png';
   const profileId = user?.id;
 
-  const { data: cartData } = useFetchCart(profileId || "");
+  const { data: cartData } = useFetchCart(profileId || '');
   const cart = cartData?.data?.cartInfo;
   const [cartLength, setCartLength] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
-    // Update cart length dynamically when cart data changes
     if (cart) {
       setCartLength(cart.items.length);
     }
   }, [cart]);
 
   const handleLogin = () => {
-    router.push("/login");
+    router.push('/login');
   };
 
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
+  const handleCategoryClick = (category: any) => {
+    router.push(`/product?category=${category}`);
+  };
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      router.push(`/product?searchTerm=${searchTerm}`);
+    }
+  };
+
+  const handleSearchKeyPress = (e: { key: string }) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      handleSearch();
+    }
+  };
+
+  const megaMenu = (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button variant="flat" size="sm" className="font-bold">
+          All Categories
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Categories">
+        <DropdownItem
+          key="electronics"
+          onClick={() => handleCategoryClick('electronics')}
+        >
+          Electronics
+        </DropdownItem>
+        <DropdownItem
+          key="fashion"
+          onClick={() => handleCategoryClick('fashion')}
+        >
+          Fashion
+        </DropdownItem>
+        <DropdownItem key="home" onClick={() => handleCategoryClick('home')}>
+          Home Appliances
+        </DropdownItem>
+        <DropdownItem
+          key="beauty"
+          onClick={() => handleCategoryClick('beauty')}
+        >
+          Beauty Products
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
+
+  const searchBar = (
+    <div className="flex items-center border rounded-md w-lg lg:w-[40vw] px-3 py-1 shadow-sm">
+      <input
+        className="flex-1 outline-none text-gray-700"
+        placeholder="Search for products..."
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyPress={handleSearchKeyPress}
+      />
+      <Button variant="flat" size="sm" onClick={handleSearch}>
+        Search
+      </Button>
+    </div>
   );
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">MartPlex</p>
-          </NextLink>
-        </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
-        <NavbarItem key="jd">
-          {user && (
-            <Button
-              className={clsx(
-                linkStyles({ color: "foreground" }),
-                "data-[active=true]:text-primary data-[active=true]:font-medium",
-              )}
-              // color="foreground"
-              onClick={() => {
-                logout();
-              }}
-            >
-              Logout
-            </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
+    <nav className="bg-transparent shadow-md sticky top-0 z-50">
+      {/* Top Row */}
+      <div
+        className="flex items-center justify-between px-4 py-3"
+        style={{
+          paddingLeft: '5%',
+          paddingRight: '5%',
+        }}
       >
-        <NavbarItem className="hidden sm:flex gap-2 items-center">
-          {user ? (
-            <Link href={`/profile/${profileId}`}>
-              <Avatar size="sm" src={avatarUrl} />
-            </Link>
-          ) : (
+        <NextLink href="/">
+          <div className="flex items-center gap-2 cursor-pointer">
+            <Image
+              src="/MartPlex-Logo.png"
+              alt="MartPlex Logo"
+              width={45}
+              height={45}
+            />
             <p>
-              <Button
-                className="bg-transparent text-blue-500"
-                onClick={handleLogin}
+              <span
+                className="font-bold text-transparent bg-clip-text"
+                style={{
+                  backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+                  fontSize: '2rem', // Custom font size
+                }}
               >
-                Login
-              </Button>
+                Mart
+              </span>
+              <span
+                className="font-bold text-transparent bg-clip-text"
+                style={{
+                  backgroundImage: 'linear-gradient(0deg, #2B709E, #000000)',
+                  fontSize: '2rem', // Custom font size
+                }}
+              >
+                Plex
+              </span>
             </p>
-          )}
+          </div>
+        </NextLink>
 
-          <ThemeSwitch />
-          {/* <FaShoppingCart className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transfor" /> */}
-          <Link href="/cart">
+        <div className="hidden lg:flex justify-center">{searchBar}</div>
+
+        <div className="flex items-center gap-4">
+          <div className="lg:hidden flex items-center gap-2">
+            <FaSearch
+              className="text-gray-700 cursor-pointer hover:text-blue-500"
+              onClick={() => setShowSearch(!showSearch)}
+            />
+          </div>
+          {user ? (
+            <NextLink href={`/profile/${profileId}`}>
+              <Avatar size="sm" src={avatarUrl} />
+            </NextLink>
+          ) : (
+            <Button onClick={handleLogin}>Login</Button>
+          )}
+          <NextLink href="/cart">
             <Badge
-              className=" transform hover:scale-110 transition-transform"
+              className="hover:scale-110 transition-transform"
               color="danger"
               content={user ? cartLength : 0}
             >
-              <FaShoppingCart className="w-6 h-6 text-zinc-500 cursor-pointer transform hover:scale-110 transition-transform" />
+              <FaShoppingCart className="w-6 h-6 text-sky-800 cursor-pointer hover:text-sky-600" />
             </Badge>
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-      </NavbarContent>
+          </NextLink>
+        </div>
+      </div>
 
-      <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
-        <ThemeSwitch />
-        <NavbarMenuToggle />
-      </NavbarContent>
+      {showSearch && <div className="lg:hidden px-4 py-2">{searchBar}</div>}
 
-      <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
+      {/* Bottom Row */}
+      <div
+        className="flex items-center justify-between px-4 py-2  shadow-blue-500"
+        style={{
+          backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+          paddingLeft: '5%',
+          paddingRight: '5%',
+        }}
+      >
+        <div>{megaMenu}</div>
+        <div className="hidden lg:flex gap-4">
+          {['Home', 'Products', 'Shops', 'Sale', 'Compare'].map((menu) => (
+            <NextLink
+              key={menu}
+              href={`/${menu.toLowerCase()}`}
+              className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+            >
+              {menu}
+            </NextLink>
           ))}
         </div>
-      </NavbarMenu>
-    </NextUINavbar>
+        <div className="lg:hidden">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="flat" size="sm">
+                Menu
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Other Menus">
+              {['Home', 'Products', 'Shops', 'Sale', 'Compare'].map((menu) => (
+                <DropdownItem
+                  key={menu}
+                  onClick={() => router.push(`/${menu.toLowerCase()}`)}
+                >
+                  {menu}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </div>
+    </nav>
   );
 };

@@ -1,20 +1,20 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
+import { getAccessToken } from "../AuthService";
 
-import axiosInstance from '@/src/lib/AxiosInstance';
-import { IOrder, IOrderResponse, UpdatePaymentPayload } from '@/src/types';
+import axiosInstance from "@/src/lib/AxiosInstance";
+import { IOrder, IOrderResponse, UpdatePaymentPayload } from "@/src/types";
 
 // Create a new order
 export const createOrder = async (payload: any): Promise<{ data: IOrder }> => {
-  const token = cookies().get('accessToken')?.value;
+  const token = await getAccessToken();
 
   if (!token) {
-    throw new Error('Access token is missing. Please log in again.');
+    throw new Error("Access token is missing. Please log in again.");
   }
 
   try {
-    const response = await axiosInstance.post('/order/create-order', payload, {
+    const response = await axiosInstance.post("/order/create-order", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -22,8 +22,8 @@ export const createOrder = async (payload: any): Promise<{ data: IOrder }> => {
 
     return response.data;
   } catch (error: any) {
-    console.error('Error creating order:', error);
-    throw new Error(error.response?.data?.message || 'Failed to create order.');
+    console.error("Error creating order:", error);
+    throw new Error(error.response?.data?.message || "Failed to create order.");
   }
 };
 
@@ -42,10 +42,10 @@ export const getAllOrdersByUser = async (
 
 // Delete Order
 export const deleteOrder = async (id: string) => {
-  const token = cookies().get('accessToken')?.value;
+  const token = await getAccessToken();
 
   if (!token) {
-    throw new Error('Access token is missing. Please log in again.');
+    throw new Error("Access token is missing. Please log in again.");
   }
 
   try {
@@ -57,22 +57,22 @@ export const deleteOrder = async (id: string) => {
 
     return response.data;
   } catch (error: any) {
-    console.error('Error deleting order: ', error);
-    throw new Error(error.response?.data?.message || 'Failed to delete order.');
+    console.error("Error deleting order: ", error);
+    throw new Error(error.response?.data?.message || "Failed to delete order.");
   }
 };
 
 // Update Payment
 export const updatePayment = async (payload: UpdatePaymentPayload) => {
-  const token = cookies().get('accessToken')?.value;
+  const token = await getAccessToken();
 
   if (!token) {
-    throw new Error('Access token is missing. Please log in again.');
+    throw new Error("Access token is missing. Please log in again.");
   }
 
   try {
     const response = await axiosInstance.patch(
-      '/payment/update/payment-method',
+      "/payment/update/payment-method",
       payload,
       {
         headers: {
@@ -83,9 +83,9 @@ export const updatePayment = async (payload: UpdatePaymentPayload) => {
 
     return response.data;
   } catch (error: any) {
-    console.error('Error updating payment:', error);
+    console.error("Error updating payment:", error);
     throw new Error(
-      error.response?.data?.message || 'Failed to update payment.',
+      error.response?.data?.message || "Failed to update payment.",
     );
   }
 };

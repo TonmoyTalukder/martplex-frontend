@@ -2,6 +2,8 @@
 
 import { cookies } from "next/headers";
 
+import { getAccessToken } from "../AuthService";
+
 import axiosInstance from "@/src/lib/AxiosInstance";
 
 export const getAllProducts = async () => {
@@ -29,7 +31,7 @@ export const getSingleProduct = async (id: string) => {
 };
 
 export const createProduct = async (productData: FormData) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
@@ -56,7 +58,7 @@ export const createProduct = async (productData: FormData) => {
 };
 
 export const updateProduct = async (id: string, productData: FormData) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");

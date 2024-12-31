@@ -1,12 +1,13 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { getAccessToken } from "../AuthService";
 
 import axiosInstance from "@/src/lib/AxiosInstance";
 
 // Create a new cart
 export const createCart = async (payload: any) => {
-  const token = cookies().get("accessToken")?.value;
+  // const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
@@ -28,7 +29,7 @@ export const createCart = async (payload: any) => {
 
 // Fetch cart by ID
 export const fetchCart = async (id: string) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
@@ -50,7 +51,7 @@ export const fetchCart = async (id: string) => {
 
 // Update cart by ID
 export const updateCart = async (id: string, payload: any) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
@@ -76,7 +77,7 @@ export const updateCart = async (id: string, payload: any) => {
 
 // Update a specific cart item by ID
 export const updateCartItem = async (id: string, payload: any) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
@@ -104,7 +105,7 @@ export const updateCartItem = async (id: string, payload: any) => {
 
 // Delete a specific cart item by ID
 export const deleteCartItem = async (id: string) => {
-  const token = cookies().get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     throw new Error("Access token is missing. Please log in again.");
