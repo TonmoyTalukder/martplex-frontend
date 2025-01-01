@@ -37,14 +37,14 @@ export const fetchCart = async (id: string) => {
 
   try {
     const response = await axiosInstance.get(`/cart/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
 
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching cart:", error);
+    // console.error("Error fetching cart:", error);
     throw new Error(error.response?.data?.message || "Failed to fetch cart.");
   }
 };
