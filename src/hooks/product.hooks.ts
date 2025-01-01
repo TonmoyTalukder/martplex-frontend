@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import {
   getAllProducts,
@@ -7,17 +7,17 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../services/ProductService";
+} from '../services/ProductService';
 
 // Fetch all products
 export const useGetAllProducts = () => {
   return useQuery({
-    queryKey: ["GET_ALL_PRODUCTS"],
+    queryKey: ['GET_ALL_PRODUCTS'],
     queryFn: () => {
       try {
         return getAllProducts();
       } catch (error) {
-        toast.error("Failed to fetch products");
+        toast.error('Failed to fetch products');
         throw error;
       }
     },
@@ -27,12 +27,12 @@ export const useGetAllProducts = () => {
 // Fetch a single product by ID
 export const useGetSingleProduct = (id: string) => {
   return useQuery({
-    queryKey: ["GET_SINGLE_PRODUCT", id],
+    queryKey: ['GET_SINGLE_PRODUCT', id],
     queryFn: () => {
       try {
         return getSingleProduct(id);
       } catch (error) {
-        toast.error("Failed to fetch product details");
+        toast.error('Failed to fetch product details');
         throw error;
       }
     },
@@ -47,12 +47,12 @@ export const useCreateProduct = () => {
   return useMutation({
     mutationFn: (formData: FormData) => createProduct(formData), // Call the API
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_ALL_PRODUCTS"] });
-      toast.success("Product created successfully!");
+      queryClient.invalidateQueries({ queryKey: ['GET_ALL_PRODUCTS'] });
+      toast.success('Product created successfully!');
     },
     onError: (error: any) => {
       const errorMessage =
-        error.response?.data?.message || "Failed to create product.";
+        error.response?.data?.message || 'Failed to create product.';
 
       toast.error(errorMessage);
     },
@@ -67,11 +67,12 @@ export const useUpdateProduct = () => {
     mutationFn: ({ id, formData }: { id: string; formData: FormData }) =>
       updateProduct(id, formData),
     onSuccess: () => {
-      toast.success("Product updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["GET_ALL_PRODUCTS"] });
+      toast.success('Product updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['GET_ALL_PRODUCTS'] });
     },
-    onError: () => {
-      toast.error("Failed to update product");
+    onError: (error: any) => {
+      console.error('Update failed:', error);
+      toast.error('Failed to update product');
     },
   });
 };
@@ -85,11 +86,11 @@ export const useDeleteProduct = () => {
       return deleteProduct(id);
     },
     onSuccess: () => {
-      toast.success("Product deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["GET_ALL_PRODUCTS"] });
+      toast.success('Product deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['GET_ALL_PRODUCTS'] });
     },
     onError: () => {
-      toast.error("Failed to delete product");
+      toast.error('Failed to delete product');
     },
   });
 };

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Badge, Button, Textarea } from "@nextui-org/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
+import { useState } from 'react';
+import { Badge, Button, Textarea } from '@nextui-org/react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { FaHome, FaShoppingCart, FaUser } from 'react-icons/fa';
 
 import {
   useGetProductsByVendorStand,
   useGetSingleVendorStand,
-} from "@/src/hooks/vendorstand.hooks";
-import { useUser } from "@/src/context/user.provider";
+} from '@/src/hooks/vendorstand.hooks';
+import { useUser } from '@/src/context/user.provider';
 
 interface IProps {
   params: {
@@ -27,7 +27,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
   const { user } = useUser();
   const loggedUserId = user?.id;
 
-  const [reviewText, setReviewText] = useState<string>("");
+  const [reviewText, setReviewText] = useState<string>('');
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   const vendorStand: any = vendorStandsData?.data?.vendorStandInfo;
@@ -41,7 +41,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
     new Set<string>(products.map((product: any) => product.category)),
   );
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const filteredProducts = selectedCategory
     ? products.filter((product: any) => product.category === selectedCategory)
@@ -53,19 +53,24 @@ const Shop = ({ params: { shopId } }: IProps) => {
   };
 
   const handleSubmitReview = () => {
-    console.log("Review Submitted:", reviewText);
-    setReviewText("");
+    console.log('Review Submitted:', reviewText);
+    setReviewText('');
   };
 
   const handleReply = (reviewId: string, replyText: string) => {
-    console.log("Reply Submitted:", { reviewId, replyText });
+    console.log('Reply Submitted:', { reviewId, replyText });
   };
 
   if (vendorLoading || productsLoading) return <p>Loading...</p>;
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <div className="relative h-80 bg-gradient-to-r from-blue-400 to-purple-600 flex flex-col items-center justify-center shadow-lg">
+      <div
+        className="relative h-80 flex flex-col items-center justify-center shadow-lg"
+        style={{
+          background: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+        }}
+      >
         {/* Logo */}
         {vendorStand?.logo ? (
           <Image
@@ -76,8 +81,22 @@ const Shop = ({ params: { shopId } }: IProps) => {
             width={120}
           />
         ) : (
-          <div className="bg-white w-28 h-28 rounded-full flex items-center justify-center text-4xl font-bold transform hover:scale-105 transition-transform duration-300">
-            {vendorStand?.name?.charAt(0)}
+          <div
+            className=" w-28 h-28 rounded-full flex items-center justify-center text-4xl font-bold transform hover:scale-105 transition-transform duration-300"
+            style={{
+              backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+              fontSize: '2rem', // Custom font size
+            }}
+          >
+            <span
+              className="font-bold text-transparent bg-clip-text"
+              style={{
+                backgroundImage: 'linear-gradient(0deg, #2B709E, #000000)',
+                // fontSize: '2rem', // Custom font size
+              }}
+            >
+              {vendorStand?.name?.charAt(0)}
+            </span>
           </div>
         )}
         <h1 className="text-white text-4xl font-bold mt-4">
@@ -91,10 +110,10 @@ const Shop = ({ params: { shopId } }: IProps) => {
             <div className="mt-4 flex flex-row items-center gap-3">
               <Button
                 className="px-4 py-2 text-white font-medium rounded-md shadow-md transform hover:scale-105 transition-transform duration-300"
-                color={isFollowing ? "secondary" : "primary"}
+                color={isFollowing ? 'secondary' : 'primary'}
                 onPress={handleFollow}
               >
-                {isFollowing ? "Unfollow" : "Follow"}
+                {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
 
               <Button
@@ -110,14 +129,33 @@ const Shop = ({ params: { shopId } }: IProps) => {
 
         {/* Menu */}
         <div className="fixed z-50 left-4 right-0 top-9 flex justify-start items-center gap-5 px-4">
-          <div className="text-white text-2xl font-bold cursor-pointer transform hover:scale-110 transition-transform">
+          {/* <div className="text-white text-2xl font-bold cursor-pointer transform hover:scale-110 transition-transform">
             <p>MartPlex</p>
+          </div> */}
+          <div className="flex items-center gap-2 cursor-pointer transform hover:scale-110 transition-transform">
+            <Image
+              src="/MartPlex-Logo.png"
+              alt="MartPlex Logo"
+              width={45}
+              height={45}
+            />
+            <p>
+              <span
+                className="font-bold text-transparent bg-clip-text"
+                style={{
+                  backgroundImage: 'linear-gradient(0deg, #2B709E, #000000)',
+                  fontSize: '2rem', // Custom font size
+                }}
+              >
+                MartPlex
+              </span>
+            </p>
           </div>
         </div>
         <div className="fixed z-50 left-0 right-4 top-9 flex justify-end items-center gap-5 px-4">
           <FaHome
             className="text-white text-2xl cursor-pointer transform hover:scale-110 transition-transform"
-            onClick={() => router.push("/")}
+            onClick={() => router.push('/')}
           />
           <FaUser
             className="text-white text-2xl cursor-pointer transform hover:scale-110 transition-transform"
@@ -228,6 +266,11 @@ const Shop = ({ params: { shopId } }: IProps) => {
           <Button
             color="primary"
             onPress={() => router.push(`/shop-dashboard/${shopId}`)}
+            style={{
+              backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+              backgroundAttachment: 'fixed',
+              color: 'white',
+            }}
           >
             Shop Dashboard
           </Button>

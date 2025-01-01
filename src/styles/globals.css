@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom input styles */
+.custom-input-class input {
+    color: white !important; /* Set text color to white */
+    background-color: transparent !important; /* Set background color to transparent */
+  }
+  
+  .custom-input-class::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important; /* Placeholder text color */
+  }
+  
+  .custom-input-class:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: rgba(255, 255, 255, 0.8); /* Optional: Add custom border color on focus */
+  }
+  

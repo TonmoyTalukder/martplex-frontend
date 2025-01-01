@@ -152,7 +152,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <Button
-                  className="w-full bg-blue-950 hover:bg-blue-500 rounded-md font-semibold"
+                  className="w-full bg-blue-950 hover:bg-blue-500 rounded-md font-semibold text-gray-100"
                   type="submit"
                 >
                   Login
@@ -176,7 +176,7 @@ export default function LoginPage() {
               </Link>
             </div>
             <Button
-              className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500"
+              className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500 text-gray-100"
               onPress={() => router.push("/")}
             >
               <TbArrowLeftDashed /> Back to Home

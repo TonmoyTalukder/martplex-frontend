@@ -1,8 +1,8 @@
-import { Input } from "@nextui-org/input";
-import { useFormContext } from "react-hook-form";
-import React, { useState, ChangeEvent } from "react";
+import { Input } from '@nextui-org/input';
+import { useFormContext } from 'react-hook-form';
+import React, { useState, ChangeEvent } from 'react';
 
-import { IInput } from "@/src/types";
+import { IInput } from '@/src/types';
 
 interface IProps extends IInput {
   isRequired?: boolean;
@@ -68,8 +68,8 @@ export const EyeFilledIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function CFInput({
-  variant = "underlined",
-  size = "md",
+  variant = 'underlined',
+  size = 'md',
   type,
   label,
   name,
@@ -90,8 +90,14 @@ export default function CFInput({
   return (
     <Input
       {...register(name, { required: isRequired, ...validation })}
+      className="custom-input-class"
+      classNames={{
+        label: 'text-white/90', // Label color
+        inputWrapper: 'bg-transparent', // Input wrapper background
+        input: 'text-white !important bg-transparent', // Explicitly set text color to white and keep background transparent
+      }}
       endContent={
-        type === "password" ? (
+        type === 'password' ? (
           <button
             aria-label="toggle password visibility"
             className="focus:outline-none"
@@ -111,7 +117,7 @@ export default function CFInput({
       isRequired={isRequired}
       label={label}
       size={size}
-      type={type === "password" && isPasswordVisible ? "text" : type}
+      type={type === 'password' && isPasswordVisible ? 'text' : type}
       value={value}
       variant={variant}
       onChange={(e: ChangeEvent<HTMLInputElement>) => onChange?.(e)}

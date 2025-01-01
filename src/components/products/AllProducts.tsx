@@ -75,6 +75,13 @@ const AllProducts = ({
       )
       .filter(
         (product: any) =>
+          !category ||
+          product?.category?.name
+            ?.toLowerCase()
+            .startsWith(category.toLowerCase()),
+      )
+      .filter(
+        (product: any) =>
           !martplex ||
           product?.vendorStand?.name?.toLowerCase() === 'martplex origin',
       );

@@ -63,7 +63,11 @@ const ShopSidebar = () => {
     <div
       className={`${
         collapsed ? "w-20" : "w-64"
-      } h-full transition-all duration-300 ${theme === "dark" ? "bg-zinc-900" : "bg-zinc-300"} py-4 rounded-tr-lg shadow-lg`}
+      } h-full transition-all duration-300 py-4 rounded-tr-lg shadow-lg`}
+      style={{
+        backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+        // fontSize: '2rem', // Custom font size
+      }}
     >
       {/* Header */}
       {!smScreen && (
@@ -112,7 +116,7 @@ const ShopSidebar = () => {
           ),
         )}
 
-        {collapsed ? (
+        {/* {collapsed ? (
           <Tooltip
             key="theme"
             className="w-full"
@@ -134,7 +138,7 @@ const ShopSidebar = () => {
           >
             <ThemeSwitch />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

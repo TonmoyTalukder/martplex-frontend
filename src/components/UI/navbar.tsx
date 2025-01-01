@@ -86,12 +86,12 @@ export const Navbar = () => {
         >
           Fashion
         </DropdownItem>
-        <DropdownItem key="home" onClick={() => handleCategoryClick('home')}>
+        <DropdownItem key="home" onClick={() => handleCategoryClick('home appliances')}>
           Home Appliances
         </DropdownItem>
         <DropdownItem
           key="beauty"
-          onClick={() => handleCategoryClick('beauty')}
+          onClick={() => handleCategoryClick('beauty products')}
         >
           Beauty Products
         </DropdownItem>
