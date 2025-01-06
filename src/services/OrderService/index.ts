@@ -27,16 +27,43 @@ export const createOrder = async (payload: any): Promise<{ data: IOrder }> => {
   }
 };
 
-// Fetch Orders by User
-export const getAllOrdersByUser = async (
-  id: string,
-): Promise<IOrderResponse[]> => {
+// Fetch Orders
+export const getAllOrders = async (): Promise<IOrderResponse[]> => {
   try {
-    const { data } = await axiosInstance.get(`/order?userId=${id}`);
+    const { data } = await axiosInstance.get(`/order/`);
 
     return data.data;
   } catch (error: any) {
     throw new Error(error);
+  }
+};
+
+// Update Order Status
+export const updateOrderStatus = async (payload: any) => {
+  const token = await getAccessToken();
+
+  if (!token) {
+    throw new Error("Access token is missing. Please log in again.");
+  }
+
+  try {
+    const response = await axiosInstance.patch(
+      "/order/update-order-status",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating order status:", error);
+
+    throw new Error(
+      error.response?.data?.message || "Failed to update order status.",
+    );
   }
 };
 

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -10,12 +10,21 @@ import {
   Image,
   Divider,
   Tooltip,
-} from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+} from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import {
+  MdOutlineStarPurple500,
+  MdOutlineStarHalf,
+  MdOutlineStarOutline,
+} from "react-icons/md";
 
-import { useUser } from '@/src/context/user.provider';
-import { useCreateCart, useFetchCart } from '@/src/hooks/cart.hooks';
+import { useUser } from "@/src/context/user.provider";
+import { useCreateCart, useFetchCart } from "@/src/hooks/cart.hooks";
 
+interface review {
+  id: string;
+  rating: number;
+}
 interface ProductCardProps {
   product: {
     id: string;
@@ -26,6 +35,7 @@ interface ProductCardProps {
     vendorStand: { id: string; name: string };
     onSale: boolean;
     discount: number;
+    reviews: review[];
   };
 }
 
@@ -36,10 +46,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { user } = useUser();
   const userId = user?.id;
 
-  const { data: cartData } = useFetchCart(userId || '');
+  const { data: cartData } = useFetchCart(userId || "");
   const cart = cartData?.data?.cartInfo;
-
-  // console.log("cart ", cart);
 
   const {
     id,
@@ -50,16 +58,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     vendorStand,
     onSale,
     discount,
+    reviews,
   } = product;
 
   const finalPrice = onSale
-    ? (price - price * (discount / 100)).toFixed(2)
-    : price.toFixed(2);
+    ? (price - price * (discount / 100))?.toFixed(2)
+    : price?.toFixed(2);
 
-  // State to control tooltip visibility
   const [showVendorTooltip, setShowVendorTooltip] = useState(false);
 
-  // Automatically hide the tooltip after a certain time
   useEffect(() => {
     if (showVendorTooltip) {
       const timer = setTimeout(() => setShowVendorTooltip(false), 1500);
@@ -70,16 +77,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleAddToCart = () => {
     if (!userId) {
-      // Redirect to login page if user is not logged in
-      router.push('/login');
+      router.push("/login");
 
       return;
     }
 
     if (cart?.items?.length > 0 && cart?.vendorId !== vendorStand.id) {
-      console.log('cart?.vendorStandId ', cart?.vendorId);
-      console.log('vendorStand.id ', vendorStand.id);
-      // Trigger the tooltip to show the restriction message
       setShowVendorTooltip(true);
 
       return;
@@ -93,50 +96,101 @@ const ProductCard = ({ product }: ProductCardProps) => {
       items: [{ productId: id, name, quantity: 1, price: Number(finalPrice) }],
     };
 
-    console.log(payload);
     createCartMutation(payload);
   };
 
+  const averageRating =
+    reviews?.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) /
+        reviews?.length
+      : 0;
+
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = 5 - fullStars - halfStar;
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, i) => (
+          <MdOutlineStarPurple500
+            key={`full-${i}`}
+            className="text-yellow-500"
+          />
+        ))}
+        {halfStar === 1 && <MdOutlineStarHalf className="text-yellow-500" />}
+        {[...Array(emptyStars)].map((_, i) => (
+          <MdOutlineStarOutline key={`empty-${i}`} className="text-gray-400" />
+        ))}
+      </>
+    );
+  };
+
+  const handleViewDetails = () => {
+    router.push(`/product/${id}`);
+  };
+
   return (
-    <Card className="w-full h-full shadow-md transition-transform transform hover:scale-105 hover:shadow-xl rounded-lg overflow-hidden">
-      <Image
-        alt={name}
-        className="w-full h-48 object-cover"
-        src={images[0] || 'https://i.ibb.co.com/t8FQT4M/7867792.png'}
-      />
+    <Card className="w-full h-full shadow-md transition-transform transform hover:scale-105 hover:shadow-xl rounded-lg overflow-hidden bg-[#e9f3fa]">
+      <div className="flex justify-center items-center h-48 w-full bg-white">
+        <Image
+          alt={name}
+          className="w-full object-cover max-h-48"
+          src={images[0] || "https://i.ibb.co/t8FQT4M/7867792.png"}
+        />
+      </div>
       <CardHeader className="flex justify-between items-center px-4 py-2">
-        <div>
-          <h2 className="text-xl font-semibold">{name}</h2>
-          <p className="text-sm text-gray-500">
-            {vendorStand?.name || 'Unknown Vendor'}
-          </p>
-        </div>
-        <div className="text-right flex flex-col">
-          {onSale && (
-            <span className="text-sm font-medium text-red-500 line-through mr-2">
-              ${price.toFixed(2)}
-            </span>
-          )}
-          <span className="text-lg font-bold text-green-600">
-            ${finalPrice}
-          </span>
+        <div className="w-full">
+          <h2 className="text-xl font-semibold">
+            {name
+              .split(" ")
+              .slice(0, 4)
+              .join(" ")
+              .concat(name.split(" ").length > 4 ? "..." : "")}
+          </h2>
+          <p className="text-sm text-gray-500">{vendorStand?.name || ""}</p>
         </div>
       </CardHeader>
       <CardBody className="px-4 py-2">
         <p className="text-gray-600 truncate">{description}</p>
+        <div className="text-left mt-2 flex flex-col">
+          {onSale && (
+            <span className="flex flex-col text-sm font-medium text-red-500 line-through mr-2">
+              ৳ {price?.toFixed(2)}
+            </span>
+          )}
+          <span className="flex flex-col text-lg font-bold text-green-600">
+            ৳ {finalPrice}
+          </span>
+        </div>
+        <div className="flex items-center mt-2">
+          {renderStars(averageRating)}
+          <span className="ml-2 text-sm text-gray-700">
+            {averageRating?.toFixed(1)}
+          </span>
+        </div>
       </CardBody>
       <Divider />
-      <CardFooter className="flex justify-end px-4 py-2">
-        {user && user?.role !== 'CUSTOMER' ? (
+      <CardFooter className="flex justify-between px-4 py-2">
+        <Button
+          className="text-white"
+          color="secondary"
+          style={{
+            backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+            backgroundAttachment: "fixed",
+          }}
+          onClick={handleViewDetails}
+        >
+          View Details
+        </Button>
+        {user && user?.role !== "CUSTOMER" ? (
           <Tooltip content="Only customers can buy" placement="top">
             <Button
               disabled
-              color="primary"
-              variant="solid"
+              color="secondary"
               style={{
-                backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-                backgroundAttachment: 'fixed',
-                color: 'white',
+                backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+                backgroundAttachment: "fixed",
               }}
             >
               Add to Cart
@@ -146,25 +200,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Tooltip
             content={
               showVendorTooltip
-                ? 'You can only add products from one vendor at a time.'
-                : 'Add to Cart'
+                ? "You can only add products from one vendor at a time."
+                : "Add to Cart"
             }
             isOpen={showVendorTooltip}
             placement="top"
           >
             <Button
               className="text-white"
-              color="primary"
+              color="secondary"
               disabled={isCreatingCart}
-              variant="solid"
-              onClick={handleAddToCart}
               style={{
-                backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-                backgroundAttachment: 'fixed',
-                color: 'white',
+                backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+                backgroundAttachment: "fixed",
               }}
+              onClick={handleAddToCart}
             >
-              {isCreatingCart ? 'Adding...' : 'Add to Cart'}
+              {isCreatingCart ? "Adding..." : "Add to Cart"}
             </Button>
           </Tooltip>
         )}

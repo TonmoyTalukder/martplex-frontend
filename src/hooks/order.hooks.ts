@@ -4,12 +4,14 @@ import { toast } from "sonner";
 import {
   createOrder,
   deleteOrder,
-  getAllOrdersByUser,
+  getAllOrders,
+  updateOrderStatus,
   updatePayment,
 } from "../services/OrderService";
 import {
   IOrder,
   IOrderResponse,
+  UpdateOrderStatusPayload,
   UpdatePaymentPayload,
   UpdatePaymentResponse,
 } from "../types";
@@ -37,12 +39,12 @@ export const useCreateOrder = () => {
 };
 
 // Hook to fetch all orders by user
-export const useGetAllOrdersByUser = (userId: string) => {
+export const useGetAllOrders = () => {
   return useQuery<IOrderResponse[], Error>({
-    queryKey: ["GET_ORDERS", userId],
+    queryKey: ["GET_ORDERS"],
     queryFn: async () => {
       try {
-        const orders = await getAllOrdersByUser(userId);
+        const orders = await getAllOrders();
 
         return orders;
       } catch (error: any) {
@@ -51,6 +53,27 @@ export const useGetAllOrdersByUser = (userId: string) => {
       }
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+};
+
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<IOrderResponse, Error, UpdateOrderStatusPayload>({
+    mutationFn: async (data: UpdateOrderStatusPayload) => {
+      const res = await updateOrderStatus(data);
+
+      console.log("Updated Order Status: ", res);
+
+      return res;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["GET_ORDERS"] });
+      toast.success("Order status updated successfully!");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update order status.");
+    },
   });
 };
 

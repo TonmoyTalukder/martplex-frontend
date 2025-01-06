@@ -1,3 +1,4 @@
+import Footer from "@/src/components/UI/footer";
 import { Navbar } from "@/src/components/UI/navbar";
 
 export default function layout({ children }: { children: React.ReactNode }) {
@@ -5,12 +6,13 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <div className="relative flex flex-col h-screen p-0">
       <Navbar />
       <main
-        className="mt-5 sm:mt-0 mx-1 sm:mx-0"
+        className="mt-5 sm:mt-0 mx-0"
         style={{
           overflowX: "hidden",
         }}
       >
-        {children}
+        <div className="min-h-[43vh]">{children}</div>
+        <Footer />
       </main>
     </div>
   );

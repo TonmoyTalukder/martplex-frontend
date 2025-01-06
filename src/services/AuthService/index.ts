@@ -175,6 +175,7 @@ interface ICurrentUser {
   id: string;
   email: string;
   role: string;
+  profilePhoto: string | null;
   isVerified: boolean;
   exp: number;
 }
@@ -217,10 +218,19 @@ export const getCurrentUser: () => Promise<ICurrentUser | null> = async () => {
       }
     }
 
+    let avatarUrl = "";
+
+    if (decodedToken.profilePhoto === null) {
+      avatarUrl = "https://i.ibb.co/wcv1QBQ/5951752.png";
+    } else {
+      avatarUrl = decodedToken.profilePhoto;
+    }
+
     const userData: ICurrentUser = {
       id: decodedToken.id,
       email: decodedToken.email,
       role: decodedToken.role,
+      profilePhoto: avatarUrl,
       isVerified: decodedToken.isVerified,
       exp: decodedToken.exp, // Include `exp` if you want it available in the return value
     };

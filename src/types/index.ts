@@ -33,7 +33,7 @@ export interface IUser {
   phoneNumber?: string;
   role?: "CUSTOMER" | "ADMIN" | "VENDOR" | "SUPER_ADMIN";
   status?: "PENDING_VERIFICATION" | "ACTIVE" | "BLOCKED" | "DELETED";
-  profilePhoto?: string | null;
+  profilePhoto: string | null;
   isVerified?: boolean;
   isDeleted?: boolean;
   verificationCode?: string | null;
@@ -93,9 +93,29 @@ export interface IOrderResponse {
   deliveryPhone: string | null;
   totalAmount: number;
   status: string;
+  items: orderProduct[];
+  user: IUser;
+  vendorStand: orderVendorStand;
   payment: IPayment;
   createdAt: string;
   updatedAt: string;
+}
+
+interface orderProduct {
+  id: string;
+  price: string;
+  quantity: string;
+  product: { id: string; name: string };
+}
+
+interface orderVendorStand {
+  id: string;
+  ownerId: string;
+}
+
+export interface UpdateOrderStatusPayload {
+  orderId: string;
+  status: string;
 }
 
 interface CODPaymentData {

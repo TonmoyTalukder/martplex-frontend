@@ -34,16 +34,6 @@ export const getSingleVendorStand = async (id: string) => {
   }
 };
 
-export const getProductsByVendorStand = async (id: string) => {
-  try {
-    const { data } = await axiosInstance.get(`/product?vendorStandId=${id}`);
-
-    return data;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-
 export const createVendorStand = async (formData: FormData) => {
   try {
     const response = await axiosInstance.post(

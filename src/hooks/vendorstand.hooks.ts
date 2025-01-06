@@ -5,7 +5,6 @@ import {
   createVendorStand,
   deleteVendorStand,
   getAllVendorStands,
-  getProductsByVendorStand,
   getVendorStands,
   updateVendorStand,
 } from "../services/VendorService";
@@ -65,27 +64,6 @@ export const useGetSingleVendorStand = (id: string) => {
         return data;
       } catch (error) {
         toast.error("Failed to fetch Vendor Stands data.");
-        throw error;
-      }
-    },
-    enabled: !!id,
-  });
-};
-
-export const useGetProductsByVendorStand = (id: string) => {
-  return useQuery({
-    queryKey: ["GET_SINGLE_VENDOR_STANDS", id],
-    queryFn: () => {
-      try {
-        console.log("Sending id... ", id);
-
-        const data = getProductsByVendorStand(id);
-
-        console.log("Products by Vendor Stand data from hooks =>", data);
-
-        return data;
-      } catch (error) {
-        toast.error("Failed to fetch Products by Vendor Stands data.");
         throw error;
       }
     },

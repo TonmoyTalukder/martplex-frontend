@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Dropdown,
@@ -8,30 +8,31 @@ import {
   Button,
   Badge,
   Avatar,
-} from '@nextui-org/react';
-import { FaShoppingCart, FaSearch } from 'react-icons/fa';
-import { SlMenu } from 'react-icons/sl';
-import { IoIosArrowDown } from 'react-icons/io';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { useUser } from '@/src/context/user.provider';
-import { useFetchCart } from '@/src/hooks/cart.hooks';
+} from "@nextui-org/react";
+import { FaShoppingCart, FaSearch } from "react-icons/fa";
+import { SlMenu } from "react-icons/sl";
+import { IoIosArrowDown } from "react-icons/io";
+import NextLink from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+
+import { useUser } from "@/src/context/user.provider";
+import { useFetchCart } from "@/src/hooks/cart.hooks";
 
 export const Navbar = () => {
+  const [cartLength, setCartLength] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
   const router = useRouter();
   const { user } = useUser();
 
   const avatarUrl =
-    user?.profilePhoto || 'https://i.ibb.co/wcv1QBQ/5951752.png';
+    user?.profilePhoto || "https://i.ibb.co/wcv1QBQ/5951752.png";
   const profileId = user?.id;
 
-  const { data: cartData } = useFetchCart(profileId || '');
+  const { data: cartData } = useFetchCart(profileId || "");
   const cart = cartData?.data?.cartInfo;
-  const [cartLength, setCartLength] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     if (cart) {
@@ -40,21 +41,24 @@ export const Navbar = () => {
   }, [cart]);
 
   const handleLogin = () => {
-    router.push('/login');
+    // router.push('/login');
+    window.location.href = "/login";
   };
 
   const handleCategoryClick = (category: any) => {
-    router.push(`/product?category=${encodeURIComponent(category)}`);
+    // router.push(`/product?category=${encodeURIComponent(category)}`);
+    window.location.href = `/product?category=${encodeURIComponent(category)}`;
   };
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      router.push(`/product?searchTerm=${encodeURIComponent(searchTerm)}`);
+      // router.push(`/product?searchTerm=${encodeURIComponent(searchTerm)}`);
+      window.location.href = `/product?searchTerm=${encodeURIComponent(searchTerm)}`;
     }
   };
 
   const handleSearchKeyPress = (e: { key: string }) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
+    if (e.key === "Enter" && searchTerm.trim()) {
       handleSearch();
     }
   };
@@ -63,12 +67,12 @@ export const Navbar = () => {
     <Dropdown>
       <DropdownTrigger>
         <Button
-          variant="flat"
-          size="sm"
           className="font-bold"
+          size="sm"
           style={{
-            fontSize: '1rem',
+            fontSize: "1rem",
           }}
+          variant="flat"
         >
           <SlMenu /> All Categories <IoIosArrowDown />
         </Button>
@@ -76,22 +80,25 @@ export const Navbar = () => {
       <DropdownMenu aria-label="Categories">
         <DropdownItem
           key="electronics"
-          onClick={() => handleCategoryClick('electronics')}
+          onClick={() => handleCategoryClick("electronics")}
         >
           Electronics
         </DropdownItem>
         <DropdownItem
           key="fashion"
-          onClick={() => handleCategoryClick('fashion')}
+          onClick={() => handleCategoryClick("fashion")}
         >
           Fashion
         </DropdownItem>
-        <DropdownItem key="home" onClick={() => handleCategoryClick('home appliances')}>
+        <DropdownItem
+          key="home"
+          onClick={() => handleCategoryClick("home appliances")}
+        >
           Home Appliances
         </DropdownItem>
         <DropdownItem
           key="beauty"
-          onClick={() => handleCategoryClick('beauty products')}
+          onClick={() => handleCategoryClick("beauty products")}
         >
           Beauty Products
         </DropdownItem>
@@ -103,7 +110,7 @@ export const Navbar = () => {
     <div
       className="flex items-center rounded-md w-lg lg:w-[40vw] px-3 py-1 shadow-sm"
       style={{
-        border: '1px solid #336B92',
+        border: "1px solid #336B92",
       }}
     >
       <input
@@ -115,14 +122,14 @@ export const Navbar = () => {
         onKeyPress={handleSearchKeyPress}
       />
       <Button
-        variant="flat"
         size="sm"
-        onClick={handleSearch}
         style={{
-          backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-          backgroundAttachment: 'fixed',
-          color: 'white',
+          backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+          backgroundAttachment: "fixed",
+          color: "white",
         }}
+        variant="flat"
+        onClick={handleSearch}
       >
         Search
       </Button>
@@ -135,24 +142,24 @@ export const Navbar = () => {
       <div
         className="flex items-center justify-between px-4 py-3"
         style={{
-          paddingLeft: '5%',
-          paddingRight: '5%',
+          paddingLeft: "5%",
+          paddingRight: "5%",
         }}
       >
         <NextLink href="/">
           <div className="flex items-center gap-2 cursor-pointer">
             <Image
-              src="/MartPlex-Logo.png"
               alt="MartPlex Logo"
-              width={45}
               height={45}
+              src="/MartPlex-Logo.png"
+              width={45}
             />
-            <p>
+            <p className="hidden sm:block">
               <span
                 className="font-bold text-transparent bg-clip-text"
                 style={{
-                  backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-                  fontSize: '2rem', // Custom font size
+                  backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+                  fontSize: "2rem", // Custom font size
                 }}
               >
                 Mart
@@ -160,8 +167,8 @@ export const Navbar = () => {
               <span
                 className="font-bold text-transparent bg-clip-text"
                 style={{
-                  backgroundImage: 'linear-gradient(0deg, #2B709E, #000000)',
-                  fontSize: '2rem', // Custom font size
+                  backgroundImage: "linear-gradient(0deg, #2B709E, #000000)",
+                  fontSize: "2rem", // Custom font size
                 }}
               >
                 Plex
@@ -172,8 +179,8 @@ export const Navbar = () => {
 
         <div className="hidden lg:flex justify-center">{searchBar}</div>
 
-        <div className="flex items-center gap-4">
-          <div className="lg:hidden flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <div className="lg:hidden flex items-center gap-1">
             <FaSearch
               className="text-gray-700 cursor-pointer hover:text-blue-500"
               onClick={() => setShowSearch(!showSearch)}
@@ -184,9 +191,14 @@ export const Navbar = () => {
               <Avatar size="sm" src={avatarUrl} />
             </NextLink>
           ) : (
-            <Button onClick={handleLogin}>Login</Button>
+            <Button
+              className="bg-transparent text-sky-800 font-semibold p-0"
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
           )}
-          <NextLink href="/cart">
+          <NextLink href={user ? "/cart" : "/login"}>
             <Badge
               className="hover:scale-110 transition-transform"
               color="danger"
@@ -204,53 +216,53 @@ export const Navbar = () => {
       <div
         className="flex items-center justify-between px-4 py-2  shadow-blue-500"
         style={{
-          backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-          paddingLeft: '5%',
-          paddingRight: '5%',
+          backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+          paddingLeft: "5%",
+          paddingRight: "5%",
         }}
       >
         <div>{megaMenu}</div>
         <div className="hidden lg:flex gap-4">
           <NextLink
             key="home"
-            href={`/`}
             className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+            href={`/`}
           >
             Home
           </NextLink>
 
           <NextLink
             key="martolex-origin"
-            href={`/products?martplex=origin`}
             className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+            href={`/products?martplex=origin`}
           >
             MartPlex Origin
           </NextLink>
           <NextLink
             key="products"
-            href={`/products`}
             className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+            href={`/products`}
           >
             Products
           </NextLink>
           <NextLink
             key="sale"
-            href={`/products?sale=true`}
             className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+            href={`/products?sale=true`}
           >
             Sale
           </NextLink>
-          {['Shops', 'Compare'].map((menu) => (
+          {["Shops", "Compare"].map((menu) => (
             <NextLink
               key={menu}
-              href={`/${menu.toLowerCase()}`}
               className="text-zinc-200 hover:text-blue-200 text-sm font-bold"
+              href={`/${menu.toLowerCase()}`}
             >
               {menu}
             </NextLink>
           ))}
         </div>
-        <div className="lg:hidden">
+        {/* <div className="lg:hidden">
           <Dropdown>
             <DropdownTrigger>
               <Button
@@ -271,6 +283,40 @@ export const Navbar = () => {
                   onClick={() => router.push(`/${menu.toLowerCase()}`)}
                 >
                   {menu}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </div> */}
+
+        <div className="lg:hidden">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button
+                className="text-white font-bold"
+                size="sm"
+                style={{
+                  fontSize: "1.5rem",
+                }}
+                variant="light"
+              >
+                <SlMenu />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Other Menus">
+              {[
+                { label: "Home", url: "/" },
+                { label: "MartPlex Origin", url: "/products?martplex=origin" },
+                { label: "Products", url: "/products" },
+                { label: "Sale", url: "/products?sale=true" },
+                { label: "Shops", url: "/shops" },
+                { label: "Compare", url: "/compare" },
+              ].map((menu) => (
+                <DropdownItem
+                  key={menu.label}
+                  onClick={() => (window.location.href = menu.url)}
+                >
+                  {menu.label}
                 </DropdownItem>
               ))}
             </DropdownMenu>

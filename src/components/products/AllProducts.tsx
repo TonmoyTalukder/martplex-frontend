@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useMemo, useEffect } from 'react';
-import { Spinner, Input, Checkbox, Slider, Button } from '@nextui-org/react';
-import ProductCard from './ProductCard';
-import { useGetAllProducts } from '@/src/hooks/product.hooks';
+import { useState, useMemo, useEffect } from "react";
+import { Spinner, Checkbox, Slider, Button } from "@nextui-org/react";
+
+import ProductCard from "./ProductCard";
+
+import { useGetAllProducts } from "@/src/hooks/product.hooks";
 
 interface AllProductsProps {
   searchTerm: string;
@@ -25,14 +27,16 @@ const AllProducts = ({
     error,
   } = useGetAllProducts();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  console.log("Product => ", products?.data);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [onSale, setOnSale] = useState<boolean>(false);
   const [inStock, setInStock] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
   useEffect(() => {
-    if (sale === 'true') {
+    if (sale === "true") {
       setOnSale(true);
     }
   }, [sale]);
@@ -42,9 +46,10 @@ const AllProducts = ({
 
   const categories: string[] = useMemo(() => {
     const allCategories = products?.data?.map(
-      (product: any) => product.category?.name || 'Unknown',
+      (product: any) => product.category?.name || "Unknown",
     );
-    return ['All', ...Array.from(new Set<string>(allCategories))];
+
+    return ["All", ...Array.from(new Set<string>(allCategories))];
   }, [products]);
 
   const filteredProducts = useMemo(() => {
@@ -53,7 +58,7 @@ const AllProducts = ({
     return products?.data
       ?.filter(
         (product: any) =>
-          selectedCategory === 'All' ||
+          selectedCategory === "All" ||
           product?.category?.name === selectedCategory,
       )
       .filter(
@@ -83,7 +88,7 @@ const AllProducts = ({
       .filter(
         (product: any) =>
           !martplex ||
-          product?.vendorStand?.name?.toLowerCase() === 'martplex origin',
+          product?.vendorStand?.name?.toLowerCase() === "martplex origin",
       );
   }, [
     selectedCategory,
@@ -98,6 +103,7 @@ const AllProducts = ({
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
+
     return filteredProducts?.slice(start, start + itemsPerPage);
   }, [filteredProducts, currentPage]);
 
@@ -106,31 +112,31 @@ const AllProducts = ({
   const totalPages = Math.ceil((filteredProducts?.length || 0) / itemsPerPage);
 
   if (isError) {
-    console.error('Product Fetching Error: ', error);
+    console.error("Product Fetching Error: ", error);
   }
 
   return (
     <div
       className="min-h-[80vh] pb-8 mt-8"
-      style={{ backgroundAttachment: 'fixed' }}
+      style={{ backgroundAttachment: "fixed" }}
     >
       {/* Mobile Filter Toggle */}
       <div
         className="md:hidden sticky top-1 z-40 shadow p-4 mb-5"
         style={{
-          backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
-          color: 'white',
+          backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
+          color: "white",
         }}
       >
         <Button
           className="w-full"
-          onClick={() => setShowFilters((prev) => !prev)}
           style={{
-            backgroundImage: 'linear-gradient(30deg, #2B709E, #032740)',
-            color: 'white',
+            backgroundImage: "linear-gradient(30deg, #2B709E, #032740)",
+            color: "white",
           }}
+          onClick={() => setShowFilters((prev) => !prev)}
         >
-          {showFilters ? 'Hide Filters' : 'Show Filters'}
+          {showFilters ? "Hide Filters" : "Show Filters"}
         </Button>
       </div>
 
@@ -139,15 +145,15 @@ const AllProducts = ({
         {(showFilters || !loadingProducts) && (
           <div
             className={`${
-              showFilters ? 'block' : 'hidden md:block'
+              showFilters ? "block" : "hidden md:block"
             } w-full md:w-1/4 p-4 shadow-lg rounded-lg max-h-[80vh] sticky top-2 z-30`}
             style={{
-              backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+              backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
             }}
           >
             <h3 className="text-xl font-semibold mb-6">Filters</h3>
             <div className="mb-4">
-              <label htmlFor="category" className="font-medium">
+              <label className="font-medium" htmlFor="category">
                 Category
               </label>
               <select
@@ -163,22 +169,22 @@ const AllProducts = ({
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="slider" className="font-medium">
+              <label className="font-medium" htmlFor="slider">
                 Price Range
               </label>
               <div className="mt-2">
                 <Slider
-                  id="slider"
+                  classNames={{
+                    filler: "bg-gradient-to-r from-sky-600 to-sky-800",
+                  }}
                   color="foreground"
-                  minValue={0}
-                  maxValue={5000}
                   defaultValue={[0, 1000]}
+                  id="slider"
+                  maxValue={5000}
+                  minValue={0}
                   step={10}
                   value={priceRange}
                   onChange={(value) => setPriceRange(value as [number, number])}
-                  classNames={{
-                    filler: 'bg-gradient-to-r from-sky-600 to-sky-800',
-                  }}
                 />
                 <div className="flex justify-between text-sm mt-2">
                   <span>${priceRange[0]}</span>
@@ -203,13 +209,13 @@ const AllProducts = ({
               </Checkbox>
             </div>
             <Button
+              className="w-full mt-4"
               onClick={() => {
-                setSelectedCategory('All');
+                setSelectedCategory("All");
                 setPriceRange([0, 1000]);
                 setOnSale(false);
                 setInStock(false);
               }}
-              className="w-full mt-4"
             >
               Reset Filters
             </Button>

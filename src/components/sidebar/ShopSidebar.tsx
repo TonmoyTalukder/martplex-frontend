@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { RiMenu2Line, RiMenu3Line } from "react-icons/ri";
 import Link from "next/link";
 import { BiSolidShoppingBag } from "react-icons/bi";
+import { RiCoupon3Fill } from "react-icons/ri";
 import { FaShop } from "react-icons/fa6";
+import { FaHome } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import { IoSettings } from "react-icons/io5";
 
 import useScreenWidth from "../hooks/useScreenWidth";
-import { ThemeSwitch } from "../UI/theme-switch";
 
 import { useShop } from "@/src/context/ShopContext";
 
@@ -38,6 +39,11 @@ const ShopSidebar = () => {
 
   const menuItems = [
     {
+      icon: <FaHome className="w-6 h-6" />,
+      label: "Home",
+      path: `/`,
+    },
+    {
       icon: <FaShop className="w-6 h-6" />,
       label: "Shop",
       path: `/vendor-stand/${shopId}`,
@@ -53,6 +59,11 @@ const ShopSidebar = () => {
       path: `/shop-dashboard/products`,
     },
     {
+      icon: <RiCoupon3Fill className="w-6 h-6" />,
+      label: "Coupons",
+      path: `/shop-dashboard/coupon`,
+    },
+    {
       icon: <BiSolidShoppingBag className="w-6 h-6" />,
       label: "Order",
       path: "/order",
@@ -65,7 +76,7 @@ const ShopSidebar = () => {
         collapsed ? "w-20" : "w-64"
       } h-full transition-all duration-300 py-4 rounded-tr-lg shadow-lg`}
       style={{
-        backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
+        backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
         // fontSize: '2rem', // Custom font size
       }}
     >

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Button,
@@ -8,26 +8,36 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/react";
-import { useState } from "react";
+} from '@nextui-org/react';
+import { useState } from 'react';
 
 import {
   useFetchCart,
   useUpdateCartItem,
   useDeleteCartItem,
-} from "@/src/hooks/cart.hooks";
-import { useUser } from "@/src/context/user.provider";
-import { useCreateOrder } from "@/src/hooks/order.hooks";
-import PaymentModal from "@/src/components/modal/PaymentModal";
+} from '@/src/hooks/cart.hooks';
+import { useUser } from '@/src/context/user.provider';
+import { useCreateOrder } from '@/src/hooks/order.hooks';
+import PaymentModal from '@/src/components/modal/PaymentModal';
+import { useGetAllCoupons } from '@/src/hooks/coupon.hooks';
+
+type Coupon = {
+  id: string;
+  code: string;
+  discount: number;
+  expiresAt: string;
+  isActive: boolean;
+  vendorStandId: string;
+};
 
 const Cart = () => {
   const { user } = useUser();
   const userId = user?.id;
 
-  // Fetch cart data
+  // Fetch cart and coupon data
   const { data: cartData, isLoading, isError } = useFetchCart(userId!);
+  const { data: coupons, isLoading: couponLoading } = useGetAllCoupons();
 
-  // Mutation hooks
   const updateCartItemMutation = useUpdateCartItem();
   const deleteCartItemMutation = useDeleteCartItem();
   const { mutate: createOrderMutation, isPending: isCreatingOrder } =
@@ -35,10 +45,23 @@ const Cart = () => {
 
   const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
   const cart = cartData?.data?.cartInfo;
 
-  console.log(cart);
+  const availableCoupons = (coupons as Coupon[])?.filter(
+    (coupon) => coupon.vendorStandId === cart?.vendorId && coupon.isActive,
+  );
+
+  const finalPrice = cart?.items.reduce(
+    (total: number, item: { price: number; quantity: number }) =>
+      total + item.price * item.quantity,
+    0,
+  );
+
+  const discountedPrice = selectedCoupon
+    ? finalPrice - finalPrice * (selectedCoupon.discount / 100)
+    : finalPrice;
 
   if (cart === undefined) return <p>Your cart is empty.</p>;
 
@@ -46,18 +69,19 @@ const Cart = () => {
   const handleQuantityChange = async (
     cartItemId: string,
     productId: string,
-    action: "increment" | "decrement",
+    action: 'increment' | 'decrement',
   ) => {
-    const item = cart?.items.find((item: any) => item.productId === productId);
+    const item = cart?.items.find(
+      (item: { productId: string }) => item.productId === productId,
+    );
 
     if (!item) return;
 
     const newQuantity =
-      action === "increment" ? item.quantity + 1 : item.quantity - 1;
+      action === 'increment' ? item.quantity + 1 : item.quantity - 1;
 
     if (newQuantity <= 0) {
       handleRemoveItem(cartItemId);
-
       return;
     }
 
@@ -69,8 +93,8 @@ const Cart = () => {
           quantity: newQuantity,
         },
       });
-    } catch (error: any) {
-      console.error("Error updating cart item:", error);
+    } catch (error) {
+      console.error('Error updating cart item:', error);
     }
   };
 
@@ -78,66 +102,47 @@ const Cart = () => {
   const handleRemoveItem = async (cartItemId: string) => {
     try {
       await deleteCartItemMutation.mutateAsync({ id: cartItemId });
-    } catch (error: any) {
-      console.error("Error removing item from cart:", error);
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
     }
   };
-
-  const finalPrice = cart?.items.reduce(
-    (total: any, item: any) => total + item.price,
-    0,
-  );
 
   // Handle place order
   const handlePlaceOrder = async () => {
     if (!cart || !cart.items || cart.items.length === 0) {
-      alert("Your cart is empty. Add items before placing an order.");
-
+      alert('Your cart is empty. Add items before placing an order.');
       return;
     }
 
     const payload = {
       userId,
       vendorStandId: cart.vendorId,
-      totalAmount: finalPrice,
+      totalAmount: discountedPrice,
       items: cart.items.map((item: any) => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.price,
         total: item.quantity * item.price,
-      })), // Ensures items is always an array
+      })),
       cartId: cart.id,
+      couponId: selectedCoupon?.id || null,
     };
 
     try {
-      console.log("Order payload: ", payload);
+      console.log('Order payload:', payload);
 
       await createOrderMutation(payload, {
         onSuccess: (order) => {
           const paymentId = order?.payment.id;
-
-          console.log("Payment ID:", paymentId);
-          setPaymentId(order?.payment.id);
+          setPaymentId(paymentId);
           setPaymentModalOpen(true);
         },
         onError: (error) => {
-          console.error("Error creating order:", error);
+          console.error('Error creating order:', error);
         },
       });
-
-      // const order = await createOrderMutation(payload);
-
-      // setPaymentId(order?.payment.id);
-      // setPaymentModalOpen(true);
-      // Optional: Perform any post-order actions (e.g., clear cart, redirect)
-    } catch (error: any) {
-      console.error("Error placing order:", error);
-
-      // Provide detailed feedback to the user
-      alert(
-        error?.response?.data?.message ||
-          "Failed to place the order. Try again.",
-      );
+    } catch (error) {
+      console.error('Error placing order:', error);
     }
   };
 
@@ -154,7 +159,7 @@ const Cart = () => {
           <Table
             aria-label="Cart Items"
             shadow="sm"
-            style={{ height: "auto", minWidth: "100%" }}
+            style={{ height: 'auto', minWidth: '100%' }}
           >
             <TableHeader>
               <TableColumn>Name</TableColumn>
@@ -167,19 +172,19 @@ const Cart = () => {
               {cart.items.map((item: any) => (
                 <TableRow key={item.productId}>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                  <TableCell>৳ {item.price.toFixed(2)}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ৳ {(item.price * item.quantity).toFixed(2)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="flex flex-row gap-2">
                     <Button
                       size="sm"
                       onClick={() =>
                         handleQuantityChange(
                           item.id,
                           item.productId,
-                          "increment",
+                          'increment',
                         )
                       }
                     >
@@ -191,7 +196,7 @@ const Cart = () => {
                         handleQuantityChange(
                           item.id,
                           item.productId,
-                          "decrement",
+                          'decrement',
                         )
                       }
                     >
@@ -209,14 +214,53 @@ const Cart = () => {
               ))}
             </TableBody>
           </Table>
-          <div className="flex justify-end mt-4">
+
+          <div className="flex flex-row items-center justify-end mt-4">
+            <p className="text-lg font-bold mr-4">
+              Total: ৳ {discountedPrice.toFixed(2)}
+            </p>
             <Button
-              color="success"
-              isDisabled={isCreatingOrder} // Prevent multiple clicks during loading
+              className="bg-lime-600 text-white"
+              // color="success"
+              isDisabled={isCreatingOrder}
               onClick={handlePlaceOrder}
             >
-              {isCreatingOrder ? "Placing Order..." : "Place Order"}
+              {isCreatingOrder ? 'Placing Order...' : 'Place Order'}
             </Button>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-xl font-bold mb-2">Available Coupons</h2>
+            {availableCoupons?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {availableCoupons.map((coupon) => (
+                  <div
+                    key={coupon.id}
+                    className={`border p-4 rounded-lg cursor-pointer transition-transform transform hover:scale-105 ${
+                      selectedCoupon?.id === coupon.id
+                        ? 'border-dotted border-green-700 bg-lime-50'
+                        : 'border-dashed border-gray-300'
+                    }`}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() =>
+                      setSelectedCoupon(
+                        selectedCoupon?.id === coupon.id ? null : coupon,
+                      )
+                    }
+                  >
+                    <h3 className="text-lg font-semibold">{coupon.code}</h3>
+                    <p className="text-sm">{coupon.discount}% off</p>
+                    <p className="text-xs text-gray-500">
+                      Expires on:{' '}
+                      {new Date(coupon.expiresAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No coupons available.</p>
+            )}
           </div>
         </>
       )}
