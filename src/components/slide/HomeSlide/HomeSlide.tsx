@@ -11,7 +11,7 @@ const slides = [
     description: "Explore a world of amazing products at unbeatable prices!",
     buttonText: "Visit Martplex",
     link: "/products?martplex=origin",
-    bgColor: "bg-gradient-to-b from-[#A1C4FD] to-[#C2E9FB]", // Light gradient
+    bgColor: "bg-gradient-to-b from-[#A1C4FD] to-[#C2E9FB]",
     image: "/MartPlex-Logo.png",
     orientation: "image-left",
   },
@@ -44,9 +44,9 @@ const HomeSlide = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(interval); // Cleanup on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const handleNextSlide = () => {
@@ -57,16 +57,18 @@ const HomeSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  const handleDotClick = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   const current = slides[currentSlide];
 
   return (
-    <div className="relative h-[55vh] w-[90vw] flex items-center justify-center overflow-hidden rounded-lg shadow-xl">
-      {/* Background */}
+    <div className="relative h-[55vh] w-[100vw] flex items-center justify-center overflow-hidden rounded-lg shadow-xl">
       <div
         className={`absolute inset-0 ${current.bgColor} transition-all duration-700`}
       />
 
-      {/* Slide Content */}
       <div className="relative z-10 w-full flex flex-row items-center justify-between px-2">
         {current.orientation === "image-left" && (
           <div className="w-1/2 flex justify-center items-center">
@@ -90,20 +92,9 @@ const HomeSlide = () => {
             {current.buttonText}
           </Button>
         </div>
-
-        {current.orientation === "image-right" && (
-          <div className="w-1/2 flex justify-center items-center">
-            <img
-              alt={current.title}
-              className="h-72 w-auto object-contain transition-transform duration-500 hover:scale-110"
-              src={current.image}
-            />
-          </div>
-        )}
       </div>
 
-      {/* Navigation Controls */}
-      <div className="absolute inset-y-0 left-4 flex items-center z-20">
+      {/* <div className="absolute inset-y-0 left-4 flex items-center z-20">
         <button
           className="bg-[#ffffff66] p-3 rounded-full shadow-md hover:bg-gray-300 transition duration-300"
           onClick={handlePrevSlide}
@@ -115,16 +106,11 @@ const HomeSlide = () => {
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              d="M15 19l-7-7 7-7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
+            <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
           </svg>
         </button>
-      </div>
-      <div className="absolute inset-y-0 right-4 flex items-center z-20">
+      </div> */}
+      {/* <div className="absolute inset-y-0 right-4 flex items-center z-20">
         <button
           className="bg-[#ffffff66] p-3 rounded-full shadow-md hover:bg-gray-300 transition duration-300"
           onClick={handleNextSlide}
@@ -136,24 +122,26 @@ const HomeSlide = () => {
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              d="M9 5l7 7-7 7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
+            <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
           </svg>
         </button>
-      </div>
+      </div> */}
 
-      {/* Indicator Dots */}
       <div className="absolute bottom-2 flex space-x-2 z-20">
         {slides.map((_, index) => (
           <div
             key={index}
-            className={`h-3 w-3 rounded-full ${
+            className={`h-3 w-3 rounded-full cursor-pointer ${
               index === currentSlide ? "bg-gray-900" : "bg-gray-400"
             } transition duration-300`}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleDotClick(index)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleDotClick(index);
+              }
+            }}
           />
         ))}
       </div>

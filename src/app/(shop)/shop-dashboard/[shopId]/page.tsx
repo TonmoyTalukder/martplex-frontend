@@ -1,27 +1,16 @@
-// ShopDashboard.tsx
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Input,
-  Spinner,
-  Tooltip,
-  Card,
-  CardBody,
-  CardHeader,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
-import Image from "next/image";
-import { AiFillEdit, AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
-import { useTheme } from "next-themes";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { AiFillEdit, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
+import { useTheme } from 'next-themes';
 
 import {
   useGetSingleVendorStand,
   useUpdateVendorStand,
-} from "@/src/hooks/vendorstand.hooks";
-import { useShop } from "@/src/context/ShopContext";
+} from '@/src/hooks/vendorstand.hooks';
+import { useShop } from '@/src/context/ShopContext';
+import { FaRegEdit } from 'react-icons/fa';
 
 interface IProps {
   params: {
@@ -41,8 +30,6 @@ const ShopDashboard = ({ params: { shopId } }: IProps) => {
 
   const vendorStand: any = vendorStandsData?.data?.vendorStandInfo;
 
-  console.log(vendorStand);
-
   const [editableFields, setEditableFields] = useState<any>({});
   const [isEditingField, setIsEditingField] = useState<string | null>(null);
   const [newLogo, setNewLogo] = useState<File | null>(null);
@@ -51,14 +38,22 @@ const ShopDashboard = ({ params: { shopId } }: IProps) => {
     setShopId(shopId);
     if (vendorStand) {
       setEditableFields({
-        name: vendorStand?.name || "",
-        description: vendorStand?.description || "",
+        name: vendorStand?.name || '',
+        description: vendorStand?.description || '',
         logo: vendorStand?.logo,
-        vendorDiscount: vendorStand?.vendorDiscount || "0",
-        vendorSale: vendorStand?.vendorSale ? "True" : "False",
+        vendorDiscount: vendorStand?.vendorDiscount || '0',
+        vendorSale: vendorStand?.vendorSale ? 'True' : 'False',
       });
     }
   }, [shopId, setShopId, vendorStand]);
+
+  const fieldLabels: Record<string, string> = {
+    name: 'Shop Name',
+    description: 'Description',
+    logo: 'Logo',
+    vendorDiscount: 'Vendor Discount (%)',
+    vendorSale: 'Vendor Sale',
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setEditableFields((prev: any) => ({ ...prev, [field]: value }));
@@ -73,18 +68,16 @@ const ShopDashboard = ({ params: { shopId } }: IProps) => {
   const saveField = (field: string) => {
     const formData = new FormData();
 
-    // Append the file if updating the logo
-    if (field === "logo" && newLogo) {
-      formData.append("file", newLogo);
+    if (field === 'logo' && newLogo) {
+      formData.append('file', newLogo);
     }
 
-    // Append the rest of the data
     const dataToUpdate = {
       id: shopId,
       data: { [field]: editableFields[field] },
     };
 
-    formData.append("data", JSON.stringify(dataToUpdate));
+    formData.append('data', JSON.stringify(dataToUpdate));
 
     handleUpdateVendorStandApi({ id: shopId, data: formData });
 
@@ -92,104 +85,97 @@ const ShopDashboard = ({ params: { shopId } }: IProps) => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto">
       {vendorLoading ? (
-        <div className="flex justify-center items-center">
-          <Spinner size="lg" />
+        <div className="flex justify-center items-center h-64">
+          <div className="spinner animate-spin w-16 h-16 border-4 border-t-blue-700 border-gray-300 rounded-full"></div>
         </div>
       ) : (
         <div
-          className={`p-6 ${theme === "dark" ? "text-zinc-900" : "text-zinc-300"}`}
+          className={`p-8 rounded-lg shadow-md ${
+            theme === 'dark'
+              ? 'bg-gray-800 text-white'
+              : 'bg-white text-gray-800'
+          }`}
         >
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Settings</h1>
+          <h1 className="text-3xl font-bold mb-8">Shop Settings</h1>
 
           {Object.entries(editableFields).map(([field, value]) => (
-            <Card key={field} className="mb-6">
-              <CardHeader className="flex items-center justify-between">
-                <h2 className="capitalize text-lg font-medium text-gray-700">
-                  {field.replace(/([A-Z])/g, " $1")}
-                </h2>
-                {!isEditingField && (
-                  <Tooltip content="Edit" placement="top">
-                    <Button
-                      isIconOnly
-                      color="primary"
-                      variant="light"
-                      onPress={() => setIsEditingField(field)}
-                    >
-                      <AiFillEdit />
-                    </Button>
-                  </Tooltip>
-                )}
-              </CardHeader>
-              <CardBody>
-                {field === "logo" ? (
-                  <div className="flex items-center gap-4">
+            <div
+              key={field}
+              className="mb-8 border-b border-gray-300 pb-6 flex flex-col"
+            >
+              <label
+                htmlFor={field}
+                className="text-lg font-semibold mb-2 text-gray-600"
+              >
+                {fieldLabels[field] || field}
+              </label>
+
+              <div className="flex justify-between items-center">
+                {field === 'logo' ? (
+                  <div className="flex items-center gap-6">
                     <Image
                       alt="Logo"
-                      className="w-16 h-16 rounded-full"
-                      height={64}
-                      src={
-                        typeof value === "string"
-                          ? value
-                          : "https://via.placeholder.com/150"
-                      }
-                      width={64}
+                      className="w-20 h-20 rounded-full"
+                      src={typeof value === 'string' ? value : '/shops.png'}
+                      width={80}
+                      height={80}
                     />
                     {isEditingField === field && (
-                      <Input
-                        accept="image/*"
+                      <input
                         type="file"
+                        accept="image/*"
                         onChange={handleLogoUpload}
+                        className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                       />
                     )}
                   </div>
-                ) : field === "vendorSale" && isEditingField === field ? (
-                  <Select
-                    onChange={(e) => handleInputChange(field, e.target.value)}
-                  >
-                    <SelectItem value="True">True</SelectItem>
-                    <SelectItem value="False">False</SelectItem>
-                  </Select>
                 ) : isEditingField === field ? (
-                  <Input
-                    fullWidth
-                    isClearable
-                    value={typeof value === "string" ? value : ""}
+                  <input
+                    id={field}
+                    type="text"
+                    value={value as string}
                     onChange={(e) => handleInputChange(field, e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg p-3 text-md"
                   />
                 ) : (
-                  <p className="text-gray-700">
-                    {typeof value === "string" ? value : "N/A"}
-                  </p>
+                  <span className="text-gray-600 text-lg">
+                    {typeof value === 'string' ? value : 'N/A'}
+                  </span>
                 )}
 
-                {isEditingField === field && (
-                  <div className="flex gap-4 mt-4">
-                    <Button
-                      isIconOnly
-                      color="success"
-                      onPress={() => saveField(field)}
+                {isEditingField === field ? (
+                  <div className="flex gap-4 px-4">
+                    <button
+                      onClick={() => saveField(field)}
+                      className="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
                     >
                       <AiOutlineCheck />
-                    </Button>
-                    <Button
-                      isIconOnly
-                      color="danger"
-                      onPress={() => setIsEditingField(null)}
+                    </button>
+                    <button
+                      onClick={() => setIsEditingField(null)}
+                      className="p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                     >
                       <AiOutlineClose />
-                    </Button>
+                    </button>
                   </div>
+                ) : (
+                  <button
+                    onClick={() => setIsEditingField(field)}
+                    className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                  >
+                    <FaRegEdit />
+                  </button>
                 )}
-              </CardBody>
-            </Card>
+              </div>
+            </div>
           ))}
 
           {updateVendorStandPending && (
-            <div className="mt-4 flex justify-center">
-              <Spinner size="md" />
-              <p className="ml-2 text-gray-600">Updating...</p>
+            <div className="mt-6 text-center text-gray-500">
+              <div className="spinner animate-spin w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full mx-auto"></div>
+              Updating...
             </div>
           )}
         </div>

@@ -30,7 +30,7 @@ const AllProducts = ({
   console.log("Product => ", products?.data);
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [onSale, setOnSale] = useState<boolean>(false);
   const [inStock, setInStock] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
@@ -178,17 +178,17 @@ const AllProducts = ({
                     filler: "bg-gradient-to-r from-sky-600 to-sky-800",
                   }}
                   color="foreground"
-                  defaultValue={[0, 1000]}
+                  defaultValue={[0, 200000]}
                   id="slider"
-                  maxValue={5000}
+                  maxValue={1000000}
                   minValue={0}
                   step={10}
                   value={priceRange}
                   onChange={(value) => setPriceRange(value as [number, number])}
                 />
                 <div className="flex justify-between text-sm mt-2">
-                  <span>${priceRange[0]}</span>
-                  <span>${priceRange[1]}</span>
+                  <span>৳{priceRange[0]}</span>
+                  <span>৳{priceRange[1]}</span>
                 </div>
               </div>
             </div>
@@ -230,28 +230,34 @@ const AllProducts = ({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {paginatedProducts?.map((product: any) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-              <div className="flex justify-center mt-6">
-                <Button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
-                >
-                  Previous
-                </Button>
-                <span className="mx-4">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                >
-                  Next
-                </Button>
-              </div>
+              {paginatedProducts.length <= 0 ? (
+                <div className="w-full text-center">No products found</div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {paginatedProducts?.map((product: any) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                  <div className="flex justify-center mt-6">
+                    <Button
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((prev) => prev - 1)}
+                    >
+                      Previous
+                    </Button>
+                    <span className="mx-4">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

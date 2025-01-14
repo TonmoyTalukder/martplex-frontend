@@ -1,5 +1,5 @@
 import { FaHome, FaUser, FaUsers } from "react-icons/fa";
-import { BiSolidShoppingBag } from "react-icons/bi";
+import { BiSolidOffer, BiSolidShoppingBag } from "react-icons/bi";
 import { FaShop } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
 import { ReactNode } from "react";
@@ -44,6 +44,16 @@ export const AdminMenuItems: MenuItem[] = [
     icon: <FaUser className="w-6 h-6" />,
     label: "Profile",
     path: "/profile/:id",
+  },
+  {
+    icon: <BiSolidOffer className="w-6 h-6" />,
+    label: "Flash Sale",
+    path: "/admin/flash-sale",
+  },
+  {
+    icon: <FaShop className="w-6 h-6" />,
+    label: "Shops",
+    path: "/admin/shops",
   },
   {
     icon: <AiFillProduct className="w-6 h-6" />,

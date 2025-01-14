@@ -174,7 +174,11 @@ const OrderPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold text-center mb-6">My Orders</h1>
+      {user?.role === 'CUSTOMER' ? (
+        <h1 className="text-3xl font-bold text-center mb-6">My Orders</h1>
+      ) : (
+        <h1 className="text-3xl font-bold text-center mb-6">All Orders</h1>
+      )}
 
       <div className="mb-4 flex gap-4">
         <Select
@@ -343,18 +347,20 @@ const OrderPage = () => {
                   </>
                 )}
 
-                {!order.payment?.transactionId && user?.role === 'ADMIN' && (
+                {user?.role === 'ADMIN' && (
                   <>
-                    <Button
-                      className="mr-2"
-                      color="danger"
-                      variant="flat"
-                      onClick={() => {
-                        handleOrderStatusUpdate(order.id, 'CANCELED');
-                      }}
-                    >
-                      Cancel
-                    </Button>
+                    {!order.payment?.transactionId && (
+                      <Button
+                        className="mr-2"
+                        color="danger"
+                        variant="flat"
+                        onClick={() => {
+                          handleOrderStatusUpdate(order.id, 'CANCELED');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    )}
 
                     <Button
                       color="danger"

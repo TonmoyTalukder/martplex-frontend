@@ -61,10 +61,10 @@ export default function LoginPage() {
 
   const handleTestCredentials = (role: string) => {
     if (role === "admin") {
-      setEmail("admin.ph@mail.com");
+      setEmail("admin.mp@mail.com");
       setPassword("123456");
     } else if (role === "vendor") {
-      setEmail("hermione@gmail.com");
+      setEmail("vendor.mp@mail.com");
       setPassword("123456");
     } else {
       setEmail("user@test.com");
@@ -105,25 +105,28 @@ export default function LoginPage() {
           <div className="flex flex-col items-center justify-center w-full p-6 space-y-4 md:w-1/2">
             <h2 className="text-3xl font-semibold text-center">Login</h2>
 
-            <div className="w-full p-4 mt-4 border rounded-lg border-dashed border-blue-500">
+            <div className="w-full p-4  border rounded-lg border-dashed border-blue-500">
               <p className="mb-2 text-center">
                 Credentials for Testing Purpose:
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
+                  size="sm"
                   onPress={() => handleTestCredentials("admin")}
                 >
                   Admin
                 </Button>
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
+                  size="sm"
                   onPress={() => handleTestCredentials("vendor")}
                 >
                   Vendor
                 </Button>
                 <Button
                   className="bg-blue-600 hover:bg-blue-500"
+                  size="sm"
                   onPress={() => handleTestCredentials("user")}
                 >
                   User
@@ -131,9 +134,9 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="w-[85%] p-10 rounded-lg shadow-2xl text-white bg-blend-darken">
+            <div className="w-[85%] p-5 rounded-lg shadow-2xl text-white bg-blend-darken">
               <CFForm onSubmit={onSubmit}>
-                <div className="py-3">
+                <div className="py-0">
                   <CFInput
                     label="Email"
                     name="email"
@@ -160,27 +163,26 @@ export default function LoginPage() {
               </CFForm>
             </div>
 
-            <div className="text-sm text-center">
+            <div className="text-sm text-center w-full space-y-2">
               <Link
                 className="text-blue-600 hover:underline"
                 href="/forget-password"
               >
                 Forgot Password?
               </Link>
+              <div className="text-sm text-center">
+                Don’t have an account?&nbsp;
+                <Link className="text-blue-600 hover:underline" href="/signup">
+                  Sign Up
+                </Link>
+              </div>
+              <Button
+                className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500 text-gray-100"
+                onPress={() => router.push("/")}
+              >
+                <TbArrowLeftDashed /> Back to Home
+              </Button>
             </div>
-
-            <div className="text-sm text-center">
-              Don’t have an account?&nbsp;
-              <Link className="text-blue-600 hover:underline" href="/signup">
-                Sign Up
-              </Link>
-            </div>
-            <Button
-              className="w-2/5 mb-4 bg-blue-950 hover:bg-blue-500 text-gray-100"
-              onPress={() => router.push("/")}
-            >
-              <TbArrowLeftDashed /> Back to Home
-            </Button>
           </div>
         </div>
       </div>

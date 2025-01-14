@@ -30,7 +30,7 @@ export default function Home() {
   }
 
   return (
-    <section className="w-[100vw] flex flex-col items-center justify-center gap-0 py-8 md:py-10 bg-[#e9f3fa]">
+    <section className="w-[100vw] flex flex-col items-center justify-center gap-0 bg-[#e9f3fa]">
       <HomeSlide />
       <SelectedCategories />
       <NewArrivals />

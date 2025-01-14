@@ -248,7 +248,7 @@ const Shop = ({ params: { shopId } }: IProps) => {
                   backgroundImage: "linear-gradient(314deg, #336B92, #8DC2EF)",
                   color: "white",
                 }}
-                onPress={() => router.push(`/shop-dashboard/${shopId}`)}
+                onPress={() => router.push(`/shop-dashboard/overview`)}
               >
                 Shop Dashboard
               </Button>

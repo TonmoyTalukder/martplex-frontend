@@ -6,7 +6,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <div className="relative flex flex-col h-screen p-0">
       <Navbar />
       <main
-        className="mt-5 sm:mt-0 mx-0"
+        className="mt-0 sm:mt-0 mx-0"
         style={{
           overflowX: "hidden",
         }}

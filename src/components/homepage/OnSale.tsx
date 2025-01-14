@@ -53,7 +53,7 @@ const OnSale = () => {
 
         {!loadingProducts && (
           <div
-            className={`grid ${gridCols} gap-6 ${
+            className={`grid max-w-md ${gridCols} gap-6 ${
               isCentered ? "justify-center" : ""
             }`}
           >

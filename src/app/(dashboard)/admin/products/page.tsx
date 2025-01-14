@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Modal,
   ModalContent,
@@ -19,19 +19,23 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@nextui-org/react";
-import { toast } from "sonner";
+  Tooltip,
+} from '@nextui-org/react';
+import { toast } from 'sonner';
 
 import {
   useCreateProduct,
   useDeleteProduct,
   useGetAllProducts,
   useUpdateProduct,
-} from "@/src/hooks/product.hooks";
+} from '@/src/hooks/product.hooks';
 import {
   useCreateCategory,
   useGetAllCategories,
-} from "@/src/hooks/category.hooks";
+} from '@/src/hooks/category.hooks';
+import { BiEdit } from 'react-icons/bi';
+import { MdDeleteForever } from 'react-icons/md';
+import Link from 'next/link';
 
 const ProductPage = () => {
   const { data: products, isLoading: loadingProducts } = useGetAllProducts();
@@ -59,10 +63,10 @@ const ProductPage = () => {
   } = useDisclosure();
 
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [newCategoryData, setNewCategoryData] = useState({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
   });
 
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -73,7 +77,7 @@ const ProductPage = () => {
   // Handle form submission
   const onSubmit = async (formData: any) => {
     if (!formData.categoryId) {
-      toast.error("Please select a category.");
+      toast.error('Please select a category.');
 
       return;
     }
@@ -84,19 +88,19 @@ const ProductPage = () => {
       name: formData.name,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock, 10),
-      description: formData.description || "",
+      description: formData.description || '',
       categoryId: formData.categoryId,
     };
 
-    formDataToSend.append("data", JSON.stringify(cleanPayload));
+    formDataToSend.append('data', JSON.stringify(cleanPayload));
 
     // Append new images
     imagesToUpload.forEach((file) => {
-      formDataToSend.append("files", file);
+      formDataToSend.append('files', file);
     });
 
     // Append remaining existing images
-    formDataToSend.append("existingImages", JSON.stringify(imagePreviews));
+    formDataToSend.append('existingImages', JSON.stringify(imagePreviews));
 
     try {
       if (editingProduct) {
@@ -104,10 +108,10 @@ const ProductPage = () => {
           id: editingProduct.id,
           formData: formDataToSend,
         });
-        toast.success("Product updated successfully!");
+        toast.success('Product updated successfully!');
       } else {
         await createProduct(formDataToSend);
-        toast.success("Product created successfully!");
+        toast.success('Product created successfully!');
       }
 
       closeModal();
@@ -116,8 +120,8 @@ const ProductPage = () => {
       setImagePreviews([]);
       setImagesToUpload([]);
     } catch (error) {
-      console.error("Error saving product:", error);
-      toast.error("Failed to save product");
+      console.error('Error saving product:', error);
+      toast.error('Failed to save product');
     }
   };
 
@@ -131,7 +135,7 @@ const ProductPage = () => {
   const handleCreateCategorySubmit = () => {
     createCategory(newCategoryData, {
       onSuccess: () => {
-        toast.success("Category created successfully!");
+        toast.success('Category created successfully!');
         closeCategoryModal();
       },
     });
@@ -139,11 +143,11 @@ const ProductPage = () => {
 
   const handleEditProduct = (product: any) => {
     setEditingProduct(product);
-    setValue("name", product.name);
-    setValue("price", product.price);
-    setValue("stock", product.stock);
-    setValue("description", product.description);
-    setValue("categoryId", product.categoryId);
+    setValue('name', product.name);
+    setValue('price', product.price);
+    setValue('stock', product.stock);
+    setValue('description', product.description);
+    setValue('categoryId', product.categoryId);
 
     setImagePreviews(product.images || []); // Set existing images
     setImagesToUpload([]);
@@ -183,17 +187,19 @@ const ProductPage = () => {
         <h1 className="text-2xl font-bold">Products</h1>
       </div>
 
-      <Input
-        isClearable
-        placeholder="Search products..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <div className="my-5 max-w-md">
+        <Input
+          isClearable
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
       {/* Product Table */}
       <Table
         aria-label="Product Table"
-        style={{ height: "auto", minWidth: "100%" }}
+        style={{ height: 'auto', minWidth: '100%' }}
       >
         <TableHeader>
           <TableColumn>Name</TableColumn>
@@ -205,28 +211,43 @@ const ProductPage = () => {
         <TableBody>
           {filteredProducts?.map((product: any) => (
             <TableRow key={product.id}>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>${product.price}</TableCell>
-              <TableCell>{product.stock}</TableCell>
-              <TableCell>{product.category?.name || "N/A"}</TableCell>
               <TableCell>
-                <Button
-                  color="warning"
-                  onPress={() => handleEditProduct(product)}
+                <Link
+                  className="hover:underline"
+                  href={`/product/${product.id}`}
                 >
-                  Edit
-                </Button>
-                <Button
-                  color="danger"
-                  onPress={() =>
-                    deleteProduct(product.id, {
-                      onSuccess: () =>
-                        toast.success("Product deleted successfully!"),
-                    })
-                  }
-                >
-                  Delete
-                </Button>
+                  {product.name}
+                </Link>
+              </TableCell>
+              <TableCell>৳ {product.price}</TableCell>
+              <TableCell>{product.stock}</TableCell>
+              <TableCell>{product.category?.name || 'N/A'}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <Tooltip content="Edit Product">
+                    <Button
+                      isIconOnly
+                      color="primary"
+                      onPress={() => handleEditProduct(product)}
+                    >
+                      <BiEdit size={20} />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="Delete Product">
+                    <Button
+                      isIconOnly
+                      color="danger"
+                      onPress={() =>
+                        deleteProduct(product.id, {
+                          onSuccess: () =>
+                            toast.success('Product deleted successfully!'),
+                        })
+                      }
+                    >
+                      <MdDeleteForever size={20} />
+                    </Button>
+                  </Tooltip>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -237,19 +258,19 @@ const ProductPage = () => {
       <Modal isOpen={isModalOpen} onOpenChange={closeModal}>
         <ModalContent>
           <ModalHeader>
-            {editingProduct ? "Edit Product" : "Create Product"}
+            {editingProduct ? 'Edit Product' : 'Create Product'}
           </ModalHeader>
           <ModalBody>
             <form id="product-form" onSubmit={handleSubmit(onSubmit)}>
               <Input
                 label="Name"
-                {...register("name", { required: "Name is required" })}
+                {...register('name', { required: 'Name is required' })}
               />
-              <Input label="Price" type="number" {...register("price")} />
-              <Input label="Stock" type="number" {...register("stock")} />
-              <Input label="Description" {...register("description")} />
+              <Input label="Price" type="number" {...register('price')} />
+              <Input label="Stock" type="number" {...register('stock')} />
+              <Input label="Description" {...register('description')} />
 
-              <Select label="Category" {...register("categoryId")} required>
+              <Select label="Category" {...register('categoryId')} required>
                 {categories?.data?.map((category: any) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}
@@ -278,15 +299,15 @@ const ProductPage = () => {
                       color="danger"
                       size="sm"
                       style={{
-                        borderRadius: "50%",
-                        padding: "0.5rem",
-                        minWidth: "24px",
-                        minHeight: "24px",
-                        backgroundColor: "transparent",
-                        color: "red",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        borderRadius: '50%',
+                        padding: '0.5rem',
+                        minWidth: '24px',
+                        minHeight: '24px',
+                        backgroundColor: 'transparent',
+                        color: 'red',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}
                       onClick={() => handleRemoveImage(index)}
                     >
@@ -305,7 +326,7 @@ const ProductPage = () => {
               Cancel
             </Button>
             <Button color="primary" form="product-form" type="submit">
-              {editingProduct ? "Update" : "Create"}
+              {editingProduct ? 'Update' : 'Create'}
             </Button>
           </ModalFooter>
         </ModalContent>
