@@ -1,14 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import NewArrivals from "@/src/components/homepage/NewArrivals";
-import SelectedCategories from "@/src/components/homepage/SelectedCategories";
-import HomeSlide from "@/src/components/slide/HomeSlide/HomeSlide";
-import OnSale from "@/src/components/homepage/OnSale";
-import MartPlexOriginal from "@/src/components/homepage/MartPlexOriginal";
-import TopSellingProducts from "@/src/components/homepage/TopSellingProducts";
-import CustomerSupport from "@/src/components/homepage/CustomerSupport";
+import NewArrivals from '@/src/components/homepage/NewArrivals';
+import SelectedCategories from '@/src/components/homepage/SelectedCategories';
+import HomeSlide from '@/src/components/slide/HomeSlide/HomeSlide';
+import OnSale from '@/src/components/homepage/OnSale';
+import MartPlexOriginal from '@/src/components/homepage/MartPlexOriginal';
+import TopSellingProducts from '@/src/components/homepage/TopSellingProducts';
+import CustomerSupport from '@/src/components/homepage/CustomerSupport';
+import FlashSales from '@/src/components/homepage/FlashSales';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,14 +31,15 @@ export default function Home() {
   }
 
   return (
-    <section className="w-[100vw] flex flex-col items-center justify-center gap-0 bg-[#e9f3fa]">
+    <section className="w-[100vw] flex flex-col items-center justify-center gap-0 bg-[#f7f8f4]">
       <HomeSlide />
+      <FlashSales />
       <SelectedCategories />
       <NewArrivals />
+      <CustomerSupport />
       <OnSale />
       <TopSellingProducts />
       <MartPlexOriginal />
-      <CustomerSupport />
     </section>
   );
 }

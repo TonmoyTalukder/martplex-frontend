@@ -13,7 +13,7 @@ import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { SlMenu } from 'react-icons/sl';
 import { IoIosArrowDown } from 'react-icons/io';
 import NextLink from 'next/link';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 import { useUser } from '@/src/context/user.provider';
@@ -50,7 +50,7 @@ export const Navbar = () => {
   const handleSearch = () => {
     if (searchTerm.trim()) {
       window.location.href = `/product?searchTerm=${encodeURIComponent(
-        searchTerm,
+        searchTerm
       )}`;
     }
   };
@@ -135,10 +135,22 @@ export const Navbar = () => {
   );
 
   return (
-    <nav className="bg-transparent shadow-md sticky top-0 z-50">
+    <nav className="bg-transparent shadow-md">
+      <div
+        className="w-full h-[5vh]"
+        style={{
+          backgroundImage: `url('/top-nav.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* <TopBar /> */}
+      </div>
+
       {/* Top Row */}
       <div
-        className="flex items-center justify-between px-4 py-4 bg-white"
+        className="flex items-center justify-between px-4 py-6 bg-white"
         style={{
           paddingLeft: '5%',
           paddingRight: '5%',
@@ -212,7 +224,7 @@ export const Navbar = () => {
 
       {/* Bottom Row */}
       <div
-        className="flex items-center justify-between px-4 py-4 sticky top-0 z-10 bg-blue-700 sticky top-0 z-10 "
+        className="flex items-center justify-between px-4 py-4 sticky top-0 z-10 bg-blue-700"
         style={{
           backgroundImage: 'linear-gradient(314deg, #336B92, #8DC2EF)',
           paddingLeft: '5%',

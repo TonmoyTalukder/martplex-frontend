@@ -40,7 +40,7 @@ const SelectedCategories = () => {
   return (
     <div className="py-10 px-5 mt-5 w-[90vw]">
       {/* Section Heading */}
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+      <h1 className="text-3xl font-bold text-left mb-8 text-gray-800">
         Explore Selected Categories
       </h1>
 
